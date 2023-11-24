@@ -18,10 +18,10 @@ This is a python flask API project to shortlist cv and schedule interviews
 3. Go to folder: env\Scripts and run command in CMD at this location: `activate`. You should see **(env)** written in the CMD at the start of the path. This has activated the virtual environment
 4. Be in the same CMD and go back to the folder speech_to_text and run command - `pip install -r requirements.txt`
 5. Now from the same CMD, run below command by changing your project location:
-   openapi-generator-cli generate -t E:\NK\PythonProject\speech_to_text\codegen\template -i E:\NK\PythonProject\speech_to_text\src\codegen_server\openapi_server\openapi\openapi.yaml -g python-flask -o E:\NK\PythonProject\speech_to_text\src\codegen_server --generate-alias-as-model
+   openapi-generator-cli generate -t E:\NK\PythonProject\cv_shortlister\codegen\template -i E:\NK\PythonProject\cv_shortlister\src\codegen_server\openapi_server\openapi\openapi.yaml -g python-flask -o E:\NK\PythonProject\cv_shortlister\src\codegen_server --generate-alias-as-model
 
-   **Note**: Please note that the project location till speech_to_text folder needs to change based on your system
-6. Change the content of speech_to_text/src/codegen_server/openapi_server/__main__.py:
+   **Note**: Please note that the project location till cv_shortlister folder needs to change based on your system
+6. Change the content of cv_shortlister/src/codegen_server/openapi_server/__main__.py:
 
 #!/usr/bin/env python3<br/>
 import os<br/>
@@ -36,6 +36,6 @@ if __name__ == '__main__':<br/>
 
    **Note**: If you see "br" in the above code, then remove those from the python code
 
-7. Run command from same CMD when **(env)** is present at the project path: `SET PYTHONPATH=E:\NK\PythonProject\speech_to_text\src\codegen_server`
+7. Run command from same CMD when **(env)** is present at the project path: `SET PYTHONPATH=E:\NK\PythonProject\cv_shortlister\src\codegen_server`
    **Note**: Please note that the relevant project path may change according to your system
-8. From the same CMD, go to the path: speech_to_text/src/codegen_server/openapi_server and run command: `python __main__.py`
+8. From the same CMD, go to the path: cv_shortlister/src/codegen_server/openapi_server and run command: `python __main__.py`
