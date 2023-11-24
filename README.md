@@ -1,4 +1,4 @@
-# speech_to_text
+# cv_shortlister
 This is a python flask API project to shortlist cv and schedule interviews
 
 # Pre-requisite
