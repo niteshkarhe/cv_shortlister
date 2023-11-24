@@ -33,7 +33,7 @@ def main():<br/>
 if __name__ == '__main__':<br/>
    main()<br/>
 
-   **Note**: If you see "br", then remove those from the python code
+   **Note**: If you see "br" in the above code, then remove those from the python code
 
 7. Run command from same CMD when **(env)** is present at the project path: `SET PYTHONPATH=E:\NK\PythonProject\speech_to_text\src\codegen_server`
    **Note**: Please note that the relevant project path may change according to your system
