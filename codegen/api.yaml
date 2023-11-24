@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  description: speechtotext
+  title: speechtotext
+  version: 1.0.0
+servers:
+  - description: Local dev
+    url: https://localhost:8991/api
+  - description: Future dev url
+    url: https://speechtotext.globalpay.com/
+tags:
+  - description: api(s) for returning status
+    name: status
+paths:
+  /docs/swagger_ui:
+    get:
+      description: ""
+      operationId: load_swagger_ui
+      parameters:
+        - explode: false
+          in: header
+          name: accept_version
+          required: false
+          schema:
+            default: v1
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+          description: successful operation
+      security:
+        - basicAuth: []
+      summary: load swagger ui
+      tags:
+        - swagger_ui
+      x-openapi-router-controller: openapi_server.controllers.swagger_ui_controller
+  /audio:
+    post:
+      description: This API is used to capture audio and convert it to text and then store the result
+      operationId: get_audio
+      parameters:
+        - explode: false
+          in: header
+          name: accept_version
+          required: false
+          schema:
+            default: v1
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudioRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioObject'
+          description: Audio captured and converted and stored successfully
+      summary: To capture the audio and convert it to text and store the result
+      tags:
+        - audio
+      x-openapi-router-controller: openapi_server.controllers.audio_controller
+components:
+  schemas:
+    attribute:
+      description: An Attribute
+      example:
+        datatype: datatype
+        name: name
+        value: value
+      properties:
+        name:
+          title: name
+          type: string
+        value:
+          title: value
+          type: string
+        datatype:
+          title: datatype
+          type: string
+      title: Attribute
+      type: object
+    status:
+      example:
+        attributes:
+          - datatype: datatype
+            name: name
+            value: value
+          - datatype: datatype
+            name: name
+            value: value
+        message: message
+        version: version
+      properties:
+        message:
+          title: message
+          type: string
+        version:
+          title: version
+          type: string
+        attributes:
+          items:
+            $ref: '#/components/schemas/attribute'
+          title: attributes
+          type: array
+      title: A standard object for Status of API
+      type: object
+    Error:
+      properties:
+        code:
+          format: int64
+          title: code
+          type: integer
+        message:
+          format: string
+          title: message
+          type: string
+      title: Error Message
+      type: object
+    AudioRequest:
+      example:
+        question: question
+        start_recording: start_recording
+      properties:
+        question:
+          type: string
+        start_recording:
+          type: boolean
+    AudioObject:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+  securitySchemes:
+    basicAuth:
+      description: Requests should pass credentials in header
+      scheme: basic
+      type: http
+      x-basicInfoFunc: openapi_server.server_impl.security_controller_impl.parse_info_from_basic
