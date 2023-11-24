@@ -1,5 +1,5 @@
 # speech_to_text
-This is a python flask API project
+This is a python flask API project to shortlist cv and schedule interviews
 
 # Pre-requisite
 1. Install Python 3.11.4
