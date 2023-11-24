@@ -3,13 +3,14 @@ This is a python flask API project to shortlist cv and schedule interviews
 
 # Pre-requisite
 1. Install Python 3.11.4
-2. Open CMD and run command `python --version`. It should be 3.11.4 
+2. Open CMD and run command `python --version`. It should be 3.11.4
 3. If it is not 3.11.4 then add below path to User Environment variable
    C:\Users\nites\AppData\Local\Programs\Python\Python311\Scripts\
    C:\Users\nites\AppData\Local\Programs\Python\Python311
    **Note**: Above paths may change based on your system
-4. Make sure you have node.js installed, if not then install it and run command in another CMD: `npm install @openapitools/openapi-generator-cli -g` 
-5. clone repository
+4. Make sure you have node.js installed, if not then install it and run command in another CMD: `npm install @openapitools/openapi-generator-cli -g`
+5. Download ffmpeg by following steps: https://www.geeksforgeeks.org/how-to-install-ffmpeg-on-windows/. Add path of ffmpeg to User environment path. 
+6. clone repository
 
 # Step to run project
 1. After cloning the project, run command in CMD inside speech_to_text project folder:  `pip install virtualenv`
