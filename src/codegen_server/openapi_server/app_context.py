@@ -8,13 +8,15 @@ import sys
 import os
 import urllib
 import json
+import sqlite3
+from sqlite3 import Error
 
 from flask_sqlalchemy import SQLAlchemy
 
 app = None
 debug = os.getenv("DEBUG") is not None
 db = SQLAlchemy()
-applogger = logging.getLogger("speechtotext.api")
+applogger = logging.getLogger("cv_shortlister.api")
 
 def get_logger():
     global applogger
@@ -33,7 +35,17 @@ def init_app(application):
     init_logging()
 
     global applogger
-    db_uri = "sqlite:///" + os.getcwd() + "\\openapi_server\\dbmodels\\cvscanner.db"
+
+    #db_uri = "sqlite:///" + os.getcwd() + "\\openapi_server\\database\\cvscanner.db"
+    db_uri = "sqlite:///" + "cvscanner.db"
+
+    #connection = sqlite3.connect('cvscanner.db')
+    #cursor = connection.cursor()
+    #create_table = "CREATE TABLE users (id integer, email text, name text, role text, question text, answer text, percentage integer, result text, recordingpath text, date text)"
+    #create_table = "CREATE TABLE questions (id integer, role text, hr_email text, question text, expected_answer text)"
+    #create_table = "CREATE TABLE jobs (id integer, role text, hr_email text)"
+    #cursor.execute(create_table)
+
     applogger.info("Initializing API")
     app.config['SECRET_KEY'] = 'MySecretKeyNeedsToBeChanged'
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
@@ -48,7 +60,8 @@ def init_app(application):
     }
 
     db.init_app(app)
-    #db.create_all()
+    with app.app_context():
+        db.create_all()
 
 def init_logging():
     global applogger

@@ -12,7 +12,7 @@ def create_app():
     app = connexion.App(__name__, specification_dir='./openapi/')
     CORS(app.app)
     app.app.json_provider_class = CustomJSONProvider
-    #app.app.json = CustomJSONProvider(app.app)
+    app.app.json = CustomJSONProvider(app.app)
     app.add_api('openapi.yaml',
                 arguments={"title": "CV Scanner"},
                 pythonic_params=True

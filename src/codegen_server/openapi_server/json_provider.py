@@ -2,7 +2,7 @@ from flask.json.provider import JSONProvider
 import json
 from openapi_server.encoder import JSONEncoder
 
-class CustomJSONProvider(JSONEncoder):
+class CustomJSONProvider(JSONProvider):
 #class CustomJSONProvider():
     include_nulls = False
 

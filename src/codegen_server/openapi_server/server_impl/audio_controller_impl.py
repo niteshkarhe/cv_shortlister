@@ -57,7 +57,7 @@ class Audio_controller_Impl:
             try:
                 blobData = request.files['file']
                 filename = secure_filename(blobData.filename)
-                mpthreepath = os.path.join(os.getcwd() + "\\upload", "audiofile.mp3")
+                mpthreepath = os.path.join(os.getcwd() + "\\upload", "audiofile.mp4")
                 blobData.save(mpthreepath)
                 time.sleep(5)
                 wavpath = os.path.join(os.getcwd() + "\\upload", "audiofile.wav")

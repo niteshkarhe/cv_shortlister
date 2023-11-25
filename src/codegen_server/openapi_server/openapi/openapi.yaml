@@ -98,6 +98,147 @@ paths:
       tags:
       - swagger_ui
       x-openapi-router-controller: openapi_server.controllers.swagger_ui_controller
+  /jobs:
+    get:
+      description: This API is used to get the question details of provided job id
+      operationId: get_questions
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      - description: Job id
+        explode: true
+        in: query
+        name: job_id
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionObject'
+          description: Question details retrieved successfully
+      summary: To get the question details
+      tags:
+      - job
+      x-openapi-router-controller: openapi_server.controllers.job_controller
+    post:
+      description: This API is used to store job data for given role
+      operationId: save_job
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaveJobObject'
+          description: Job data saved successfully
+      summary: To store job data for given role
+      tags:
+      - job
+      x-openapi-router-controller: openapi_server.controllers.job_controller
+  /question:
+    get:
+      description: This API is used to get all question details
+      operationId: get_all_questions
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionObject'
+          description: Question details retrieved successfully
+      summary: To get the question details
+      tags:
+      - question
+      x-openapi-router-controller: openapi_server.controllers.question_controller
+    post:
+      description: This API is used to store questions data for given role
+      operationId: save_questions
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaveQuestionObject'
+          description: Question data saved successfully
+      summary: To store question data for given role
+      tags:
+      - question
+      x-openapi-router-controller: openapi_server.controllers.question_controller
+  /user:
+    post:
+      description: This API is used to store user response in database
+      operationId: save_user_response
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserObject'
+          description: User data stored successfully
+      summary: To store user data for given question
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
 components:
   schemas:
     attribute:
@@ -178,6 +319,55 @@ components:
           type: string
       title: AudioBlobRequest
       type: object
+    UserRequest:
+      example:
+        email: email
+        name: name
+        role: role
+        question: question
+        answer: answer
+      properties:
+        email:
+          format: email
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        question:
+          type: string
+        answer:
+          type: string
+      title: UserRequest
+      type: object
+    QuestionRequest:
+      example:
+        role: role
+        hr_email: hr_email
+        question: question
+        expected_answer: expected_answer
+      properties:
+        role:
+          type: string
+        hr_email:
+          format: email
+          type: string
+        question:
+          type: string
+        expected_answer:
+          type: string
+      title: QuestionRequest
+    JobRequest:
+      example:
+        role: role
+        hr_email: hr_email
+      properties:
+        role:
+          type: string
+        hr_email:
+          format: email
+          type: string
+      title: JobRequest
     AudioObject:
       example:
         message: message
@@ -186,6 +376,61 @@ components:
           type: string
       title: AudioObject
       type: object
+    QuestionObject:
+      example:
+        questions: question
+      properties:
+        questions:
+          items:
+            type: string
+          type: array
+      title: QuestionObject
+      type: object
+    UserObject:
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      title: UserObject
+      type: object
+    SaveQuestionObject:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      title: SaveQuestionObject
+    SaveJobObject:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      title: SaveJobObject
+    users_model:
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        question:
+          type: string
+        answer:
+          type: string
+        percentage:
+          type: integer
+        result:
+          type: string
+        recordingpath:
+          type: string
+        date:
+          format: date-time
+          type: string
   securitySchemes:
     basicAuth:
       description: Requests should pass credentials in header

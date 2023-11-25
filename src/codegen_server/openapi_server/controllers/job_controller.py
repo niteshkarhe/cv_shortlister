@@ -1,0 +1,49 @@
+import connexion
+import six
+
+from openapi_server.models.job_request import JobRequest  # noqa: E501
+from openapi_server.models.question_object import QuestionObject  # noqa: E501
+from openapi_server.models.save_job_object import SaveJobObject  # noqa: E501
+from openapi_server.server_impl.job_controller_impl import Job_controller_Impl as serviceImpl  # noqa: E501
+from openapi_server import util
+
+
+
+
+def get_questions(job_id, accept_version=None):  # noqa: E501
+    """To get the question details
+
+    This API is used to get the question details of provided job id # noqa: E501
+
+    :param job_id: Job id
+    :type job_id: str
+    :param accept_version: 
+    :type accept_version: str
+
+    :rtype: QuestionObject
+    """
+
+    impl = serviceImpl()
+
+    return impl.get_questions(job_id, accept_version)
+
+
+
+def save_job(accept_version=None, job_request=None):  # noqa: E501
+    """To store job data for given role
+
+    This API is used to store job data for given role # noqa: E501
+
+    :param accept_version: 
+    :type accept_version: str
+    :param job_request: 
+    :type job_request: dict | bytes
+
+    :rtype: SaveJobObject
+    """
+    if connexion.request.is_json:
+        job_request = JobRequest.from_dict(connexion.request.get_json())  # noqa: E501
+
+    impl = serviceImpl()
+
+    return impl.save_job(accept_version, job_request)
