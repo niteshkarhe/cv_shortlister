@@ -31,7 +31,7 @@ This is a python flask API project to shortlist cv and schedule interviews
 `   port = os.getenv("PORT") or 5000`<br/>
 `   application.run(port=port)`<br/>
 
-`if `__name__` == `'__main__'`:`<br/>
+`if __name__ == '__main__':`<br/>
 `   main()`<br/>
 
    **Note**: If you see "br" in the above code, then remove those from the python code
