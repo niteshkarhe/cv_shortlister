@@ -1,4 +1,5 @@
 a2wsgi==1.8.0
+antiorm==1.2.1
 anyio==4.0.0
 asgiref==3.7.2
 attrs==23.1.0
@@ -11,6 +12,8 @@ clickclick==20.10.2
 colorama==0.4.6
 comtypes==1.2.0
 connexion==2.14.2
+db==0.1.1
+db-sqlite3==0.0.1
 distlib==0.3.7
 ffmpeg==1.4
 filelock==3.13.1
