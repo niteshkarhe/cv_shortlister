@@ -23,7 +23,7 @@ This is a python flask API project to shortlist cv and schedule interviews
    **Note**: Please note that the project location till cv_shortlister folder needs to change based on your system
 6. Change the content of cv_shortlister/src/codegen_server/openapi_server/__main__.py:
 
-#!/usr/bin/env python3<br/>
+`#!/usr/bin/env python3<br/>
 import os<br/>
 from openapi_server.run import application<br/>
 
@@ -32,7 +32,7 @@ def main():<br/>
    application.run(port=port)<br/>
 
 if `__name__` == `'__main__'`:<br/>
-   main()<br/>
+   main()<br/>`
 
    **Note**: If you see "br" in the above code, then remove those from the python code
 
