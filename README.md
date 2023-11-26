@@ -25,14 +25,14 @@ This is a python flask API project to shortlist cv and schedule interviews
 
 `#!/usr/bin/env python3<br/>`
 `import os<br/>`
-`from openapi_server.run import application<br/>`
+`from openapi_server.run import application`<br/>
 
-`def main():<br/>`
-`   port = os.getenv("PORT") or 5000<br/>`
-`  application.run(port=port)<br/>`
+`def main():`<br/>
+`   port = os.getenv("PORT") or 5000`<br/>
+`  application.run(port=port)`<br/>
 
-`if `__name__` == `'__main__'`:<br/>`
-`  main()<br/>`
+`if `__name__` == `'__main__'`:`<br/>
+`  main()`<br/>
 
    **Note**: If you see "br" in the above code, then remove those from the python code
 
