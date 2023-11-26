@@ -100,8 +100,8 @@ paths:
       x-openapi-router-controller: openapi_server.controllers.swagger_ui_controller
   /jobs:
     get:
-      description: This API is used to get the question details of provided job id
-      operationId: get_questions
+      description: This API is used to get all job details
+      operationId: get_jobs
       parameters:
       - explode: false
         in: header
@@ -111,22 +111,14 @@ paths:
           default: v1
           type: string
         style: simple
-      - description: Job id
-        explode: true
-        in: query
-        name: job_id
-        required: true
-        schema:
-          type: string
-        style: form
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuestionObject'
-          description: Question details retrieved successfully
-      summary: To get the question details
+                $ref: '#/components/schemas/GetJobObject'
+          description: Job details retrieved successfully
+      summary: To get the job details
       tags:
       - job
       x-openapi-router-controller: openapi_server.controllers.job_controller
@@ -155,6 +147,37 @@ paths:
                 $ref: '#/components/schemas/SaveJobObject'
           description: Job data saved successfully
       summary: To store job data for given role
+      tags:
+      - job
+      x-openapi-router-controller: openapi_server.controllers.job_controller
+  /jobs/{job_id}:
+    get:
+      description: This API is used to get the question details of provided job id
+      operationId: get_jobid_questions
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: job_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionObject'
+          description: Question details retrieved successfully
+      summary: To get the question details
       tags:
       - job
       x-openapi-router-controller: openapi_server.controllers.job_controller
@@ -207,6 +230,34 @@ paths:
                 $ref: '#/components/schemas/SaveQuestionObject'
           description: Question data saved successfully
       summary: To store question data for given role
+      tags:
+      - question
+      x-openapi-router-controller: openapi_server.controllers.question_controller
+    put:
+      description: This API is used to update question and expected_answer
+      operationId: update_question
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaveQuestionObject'
+          description: Question data updated successfully
+      summary: To update question data for given role
       tags:
       - question
       x-openapi-router-controller: openapi_server.controllers.question_controller
@@ -342,11 +393,14 @@ components:
       type: object
     QuestionRequest:
       example:
+        id: id
         role: role
         hr_email: hr_email
         question: question
         expected_answer: expected_answer
       properties:
+        id:
+          type: integer
         role:
           type: string
         hr_email:
@@ -379,11 +433,14 @@ components:
     QuestionObject:
       example:
         questions: question
+        role: role
       properties:
         questions:
           items:
             type: string
           type: array
+        role:
+          type: string
       title: QuestionObject
       type: object
     UserObject:
@@ -401,6 +458,7 @@ components:
         message:
           type: string
       title: SaveQuestionObject
+      type: object
     SaveJobObject:
       example:
         message: message
@@ -408,6 +466,22 @@ components:
         message:
           type: string
       title: SaveJobObject
+      type: object
+    GetJobObject:
+      example:
+        job_id: job_id
+        role: role
+        hr_email: hr_email
+      properties:
+        job_id:
+          type: integer
+        role:
+          type: string
+        hr_email:
+          format: email
+          type: string
+      title: GetTypeObject
+      type: object
     users_model:
       properties:
         id:

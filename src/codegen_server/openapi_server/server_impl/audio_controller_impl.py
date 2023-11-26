@@ -12,6 +12,7 @@ from flask import request
 import pydub
 from pydub import AudioSegment
 import time
+from timeit import default_timer as timer
 import subprocess
 
 from openapi_server.models.error import Error
@@ -29,6 +30,7 @@ class Audio_controller_Impl:
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             try:
                 r = sr.Recognizer()
+                start = timer()
                 while(1):
                     try:
                         with sr.Microphone() as source2:
@@ -42,9 +44,17 @@ class Audio_controller_Impl:
                             return "Did you say " + MyText, 200
 
                     except sr.RequestError as e:
+                        end = timer()
+                        print(end - start)
+                        if (end - start > 10):
+                            return Error(code=404, message="No audio detected for more than 10 sec")
                         print("Could not request results; {0}".format(e))
 
                     except sr.UnknownValueError:
+                        end = time.time()
+                        print(end - start)
+                        if (end - start > 10):
+                            return Error(code=404, message="No audio detected for more than 10 sec")
                         print("unknown error occurred")
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
@@ -68,6 +78,30 @@ class Audio_controller_Impl:
 
                 with sr.AudioFile(wavpath) as source:
                     audio_data = r.record(source)
+                    start = timer()
+                    while(1):
+                        try:
+                            with sr.Microphone() as source2:
+                                r.adjust_for_ambient_noise(source2, duration=0.2)
+                                audio2 = r.listen(source2)
+                                MyText = r.recognize_google(audio2)
+                                MyText = MyText.lower()
+
+                                self.logger.info('User audio: ' + MyText)
+                                Audio_controller_Impl().SpeakText(MyText)
+                                return "Did you say " + MyText, 200
+
+                        except sr.RequestError as e:
+                            end = timer()
+                            if (end - start > 10):
+                                return Error(code=404, message="No audio detected for more than 10 sec"), 404
+                            print("Could not request results; {0}".format(e))
+
+                        except sr.UnknownValueError:
+                            end = time.time()
+                            if (end - start > 10):
+                                return Error(code=404, message="No audio detected for more than 10 sec"), 404
+                            print("unknown error occurred")
                     #text = r.recognize_google(audio_data, language='en-IN', show_all=True)
                     text = r.recognize_google(audio_data)
                     #self.logger.info("Converted text: " + str(text))

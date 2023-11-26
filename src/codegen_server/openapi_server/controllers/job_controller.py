@@ -1,6 +1,7 @@
 import connexion
 import six
 
+from openapi_server.models.get_job_object import GetJobObject  # noqa: E501
 from openapi_server.models.job_request import JobRequest  # noqa: E501
 from openapi_server.models.question_object import QuestionObject  # noqa: E501
 from openapi_server.models.save_job_object import SaveJobObject  # noqa: E501
@@ -10,12 +11,12 @@ from openapi_server import util
 
 
 
-def get_questions(job_id, accept_version=None):  # noqa: E501
+def get_jobid_questions(job_id, accept_version=None):  # noqa: E501
     """To get the question details
 
     This API is used to get the question details of provided job id # noqa: E501
 
-    :param job_id: Job id
+    :param job_id: 
     :type job_id: str
     :param accept_version: 
     :type accept_version: str
@@ -25,7 +26,24 @@ def get_questions(job_id, accept_version=None):  # noqa: E501
 
     impl = serviceImpl()
 
-    return impl.get_questions(job_id, accept_version)
+    return impl.get_jobid_questions(job_id, accept_version)
+
+
+
+def get_jobs(accept_version=None):  # noqa: E501
+    """To get the job details
+
+    This API is used to get all job details # noqa: E501
+
+    :param accept_version: 
+    :type accept_version: str
+
+    :rtype: GetJobObject
+    """
+
+    impl = serviceImpl()
+
+    return impl.get_jobs(accept_version)
 
 
 

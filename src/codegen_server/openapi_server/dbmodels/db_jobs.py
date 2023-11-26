@@ -4,8 +4,8 @@ class Db_Jobs(db.Model):
     __tablename__ = "jobs"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    role = db.Column(db.String(50))
-    hr_email = db.Column(db.String(50))
+    role = db.Column(db.String(50), nullable=False)
+    hr_email = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
         return "jobs"
@@ -17,6 +17,14 @@ class Db_Jobs(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @staticmethod
+    def get_jobs():
+        jobs = Db_Jobs.query.all()
+        if len(jobs) > 0:
+            return jobs
+        else:
+            return None
 
     @staticmethod
     def get_jobid_deails(job_id):

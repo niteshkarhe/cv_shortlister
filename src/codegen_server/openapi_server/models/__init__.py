@@ -4,6 +4,7 @@ from openapi_server.models.attribute import Attribute
 from openapi_server.models.audio_object import AudioObject
 from openapi_server.models.audio_request import AudioRequest
 from openapi_server.models.error import Error
+from openapi_server.models.get_job_object import GetJobObject
 from openapi_server.models.job_request import JobRequest
 from openapi_server.models.question_object import QuestionObject
 from openapi_server.models.question_request import QuestionRequest

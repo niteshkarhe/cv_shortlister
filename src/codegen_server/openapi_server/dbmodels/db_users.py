@@ -7,15 +7,15 @@ class Db_Users(db.Model, UsersModel):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(50), unique=True)
-    name = db.Column(db.String(50))
-    role = db.Column(db.String(50))
-    question = db.Column(db.String(50))
-    answer = db.Column(db.String(50))
-    percentage = db.Column(db.Integer)
-    result = db.Column(db.String(50))
-    recordingpath = db.Column(db.String(100))
-    date = db.Column(db.DateTime(100))
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(50), nullable=False)
+    question = db.Column(db.String(50), nullable=False)
+    answer = db.Column(db.String(50), nullable=True)
+    percentage = db.Column(db.Integer, nullable=True)
+    result = db.Column(db.String(50), nullable=True)
+    recordingpath = db.Column(db.String(100), nullable=True)
+    date = db.Column(db.DateTime(100), nullable=False)
 
     def __repr__(self):
         return "users"
