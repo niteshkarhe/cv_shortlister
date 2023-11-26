@@ -31,7 +31,7 @@ def main():<br/>
    port = os.getenv("PORT") or 5000<br/>
    application.run(port=port)<br/>
 
-if _ _name__ == '_ _main_ _':<br/>
+if _ __name__ _ == '_ __main__ _':<br/>
    main()<br/>
 
    **Note**: If you see "br" in the above code, then remove those from the python code
