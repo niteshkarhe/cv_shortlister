@@ -376,7 +376,6 @@ components:
         name: name
         role: role
         question: question
-        answer: answer
       properties:
         email:
           format: email
@@ -386,8 +385,6 @@ components:
         role:
           type: string
         question:
-          type: string
-        answer:
           type: string
       title: UserRequest
       type: object

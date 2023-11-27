@@ -3,6 +3,8 @@ from openapi_server.wrappers.standard import log_entering, log_exiting
 from openapi_server.app_context import app, db, get_logger
 from openapi_server.utils.utilities import utils
 
+from openapi_server.models.audio_object import AudioObject
+
 import speech_recognition as sr
 import pyttsx3
 import os
@@ -67,6 +69,7 @@ class Audio_controller_Impl:
             try:
                 blobData = request.files['file']
                 filename = secure_filename(blobData.filename)
+                recordid = filename[0:filename.index("-")]
                 mpthreepath = os.path.join(os.getcwd() + "\\upload", "audiofile.mp4")
                 blobData.save(mpthreepath)
                 time.sleep(5)
@@ -75,44 +78,21 @@ class Audio_controller_Impl:
                 #self.logger.info('blob data : ', blobData)
 
                 r = sr.Recognizer()
-
                 with sr.AudioFile(wavpath) as source:
                     audio_data = r.record(source)
                     start = timer()
                     while(1):
                         try:
-                            with sr.Microphone() as source2:
-                                r.adjust_for_ambient_noise(source2, duration=0.2)
-                                audio2 = r.listen(source2)
-                                MyText = r.recognize_google(audio2)
-                                MyText = MyText.lower()
-
-                                self.logger.info('User audio: ' + MyText)
-                                Audio_controller_Impl().SpeakText(MyText)
-                                return "Did you say " + MyText, 200
-
+                            text = r.recognize_google(audio_data)
+                            return AudioObject(message="For record " + str(recordid) + ", speech to text is: " + text), 200
+                        except sr.UnknownValueError:
+                            end = timer()
+                            if (end - start > 10):
+                                return AudioObject(message="Could not understand audio, unknown error"), 500
                         except sr.RequestError as e:
                             end = timer()
                             if (end - start > 10):
-                                return Error(code=404, message="No audio detected for more than 10 sec"), 404
-                            print("Could not request results; {0}".format(e))
-
-                        except sr.UnknownValueError:
-                            end = time.time()
-                            if (end - start > 10):
-                                return Error(code=404, message="No audio detected for more than 10 sec"), 404
-                            print("unknown error occurred")
-                    #text = r.recognize_google(audio_data, language='en-IN', show_all=True)
-                    text = r.recognize_google(audio_data)
-                    #self.logger.info("Converted text: " + str(text))
-                    return_text = " Did you say : " + text
-                    # try:
-                    #     for num, texts in enumerate(text['alternative']):
-                    #         return_text += str(num+1) +") " + texts['transcript']  + " <br> "
-                    # except:
-                    #     return_text = " Sorry!!!! Voice not Detected "
-
-                return str(return_text), 200
+                                return AudioObject(message=str(e)), 500
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
                 return Error(code=500, message=ex)

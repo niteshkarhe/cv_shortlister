@@ -12,7 +12,7 @@ class UserRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, email=None, name=None, role=None, question=None, answer=None):  # noqa: E501
+    def __init__(self, email=None, name=None, role=None, question=None):  # noqa: E501
         """UserRequest - a model defined in OpenAPI
 
         :param email: The email of this UserRequest.  # noqa: E501
@@ -23,30 +23,25 @@ class UserRequest(Model):
         :type role: str
         :param question: The question of this UserRequest.  # noqa: E501
         :type question: str
-        :param answer: The answer of this UserRequest.  # noqa: E501
-        :type answer: str
         """
         self.openapi_types = {
             'email': str,
             'name': str,
             'role': str,
-            'question': str,
-            'answer': str
+            'question': str
         }
 
         self.attribute_map = {
             'email': 'email',
             'name': 'name',
             'role': 'role',
-            'question': 'question',
-            'answer': 'answer'
+            'question': 'question'
         }
 
         self._email = email
         self._name = name
         self._role = role
         self._question = question
-        self._answer = answer
 
     @classmethod
     def from_dict(cls, dikt) -> 'UserRequest':
@@ -142,24 +137,3 @@ class UserRequest(Model):
         """
 
         self._question = question
-
-    @property
-    def answer(self) -> str:
-        """Gets the answer of this UserRequest.
-
-
-        :return: The answer of this UserRequest.
-        :rtype: str
-        """
-        return self._answer
-
-    @answer.setter
-    def answer(self, answer: str):
-        """Sets the answer of this UserRequest.
-
-
-        :param answer: The answer of this UserRequest.
-        :type answer: str
-        """
-
-        self._answer = answer

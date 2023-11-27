@@ -24,12 +24,13 @@ class User_controller_Impl:
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             date_format = "%Y-%m-%d %H:%M:%S"
             try:
+                Db_Users().delete()
                 db_users_obj = Db_Users(
                     email = user_request.email,
                     name = user_request.name,
                     role = user_request.role,
                     question = user_request.question,
-                    answer = user_request.answer,
+                    answer = '',
                     percentage = 100,
                     result = 'Passed',
                     recordingpath = '',
@@ -59,8 +60,8 @@ class User_controller_Impl:
 
                 print(resp)
 
-                return resp, 200
-                #return UserObject(id=db_users_obj.id), 200
+                #return resp, 200
+                return UserObject(id=db_users_obj.id), 200
                 #return "", 200
 
             except Exception as ex:
