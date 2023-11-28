@@ -26,16 +26,19 @@ class Job_controller_Impl:
             try:
                 jobs = Db_Jobs.get_jobs()
                 resp = []
-                for job in jobs:
-                    resp.append(
-                        GetJobObject(
-                            job_id=job.id,
-                            role=job.role,
-                            hr_email=job.hr_email
+                if jobs is not None:
+                    for job in jobs:
+                        resp.append(
+                            GetJobObject(
+                                job_id=job.id,
+                                role=job.role,
+                                hr_email=job.hr_email
+                            )
                         )
-                    )
 
-                return resp, 200
+                    return resp, 200
+                else:
+                    return Error(code=404, message="No job records are present"), 404
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
                 return Error(code=500, message=ex)

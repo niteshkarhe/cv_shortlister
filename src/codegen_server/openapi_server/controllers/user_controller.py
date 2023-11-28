@@ -1,11 +1,46 @@
 import connexion
 import six
 
+from openapi_server.models.get_user_data_object import GetUserDataObject  # noqa: E501
 from openapi_server.models.user_object import UserObject  # noqa: E501
 from openapi_server.models.user_request import UserRequest  # noqa: E501
 from openapi_server.server_impl.user_controller_impl import User_controller_Impl as serviceImpl  # noqa: E501
 from openapi_server import util
 
+
+
+
+def delete_userdata(accept_version=None):  # noqa: E501
+    """To delete the user data
+
+    This API is used to delete all user records # noqa: E501
+
+    :param accept_version: 
+    :type accept_version: str
+
+    :rtype: str
+    """
+
+    impl = serviceImpl()
+
+    return impl.delete_userdata(accept_version)
+
+
+
+def get_userdata(accept_version=None):  # noqa: E501
+    """To get the user data
+
+    This API is used to get all user data # noqa: E501
+
+    :param accept_version: 
+    :type accept_version: str
+
+    :rtype: GetUserDataObject
+    """
+
+    impl = serviceImpl()
+
+    return impl.get_userdata(accept_version)
 
 
 

@@ -21,6 +21,7 @@ openapi_server/models/audio_request.py
 openapi_server/models/base_model.py
 openapi_server/models/error.py
 openapi_server/models/get_job_object.py
+openapi_server/models/get_user_data_object.py
 openapi_server/models/job_request.py
 openapi_server/models/question_object.py
 openapi_server/models/question_request.py

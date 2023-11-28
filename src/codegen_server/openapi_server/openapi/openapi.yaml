@@ -262,6 +262,52 @@ paths:
       - question
       x-openapi-router-controller: openapi_server.controllers.question_controller
   /user:
+    delete:
+      description: This API is used to delete all user records
+      operationId: delete_userdata
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: User data deleted successfully
+      summary: To delete the user data
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+    get:
+      description: This API is used to get all user data
+      operationId: get_userdata
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDataObject'
+          description: User data retrieved successfully
+      summary: To get the user data
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
     post:
       description: This API is used to store user response in database
       operationId: save_user_response
@@ -478,6 +524,43 @@ components:
           format: email
           type: string
       title: GetTypeObject
+      type: object
+    GetUserDataObject:
+      example:
+        id: id
+        name: name
+        email: email
+        role: role
+        question: question
+        answer: answer
+        percentage: percentage
+        result: result
+        recordingpath: recordingpath
+        date: date
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        role:
+          type: string
+        question:
+          type: string
+        answer:
+          type: string
+        percentage:
+          type: integer
+        result:
+          type: string
+        recordingpath:
+          type: string
+        date:
+          format: date-time
+          type: string
+      title: GetUserDataObject
       type: object
     users_model:
       properties:

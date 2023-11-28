@@ -1,4 +1,5 @@
 from openapi_server.app_context import db
+from sqlalchemy import and_
 
 class Db_Questions(db.Model):
     __tablename__ = "questions"
@@ -30,5 +31,13 @@ class Db_Questions(db.Model):
         questions = Db_Questions.query.filter_by(role=role).all()
         if len(questions) > 0:
             return questions
+        else:
+            return None
+
+    @staticmethod
+    def get_actual_answer(role, question):
+        questions = Db_Questions.query.filter(and_(Db_Questions.role==role, Db_Questions.question==question)).all()
+        if len(questions) > 0:
+            return questions[0]
         else:
             return None
