@@ -49,6 +49,7 @@ def init_app(application):
     #create_table = "CREATE TABLE users (id integer, email text, name text, role text, question text, answer text, percentage integer, result text, recordingpath text, date datetime)"
     #create_table = "CREATE TABLE questions (id integer, role text, hr_email text, question text, expected_answer text)"
     #create_table = "CREATE TABLE jobs (id integer, role text, hr_email text)"
+    #create_table = "CREATE TABLE candidates (id integer, name text, email text, jobid text, FOREIGN KEY(jobid) REFERENCES jobs(id))"
     #drop_table = "DROP TABLE users"
     #cursor.execute(create_table)
 

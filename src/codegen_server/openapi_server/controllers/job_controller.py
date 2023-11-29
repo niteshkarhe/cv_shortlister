@@ -30,20 +30,24 @@ def get_jobid_questions(job_id, accept_version=None):  # noqa: E501
 
 
 
-def get_jobs(accept_version=None):  # noqa: E501
+def get_jobs(accept_version=None, email=None, login_code=None):  # noqa: E501
     """To get the job details
 
     This API is used to get all job details # noqa: E501
 
     :param accept_version: 
     :type accept_version: str
+    :param email: The candidate email
+    :type email: str
+    :param login_code: The candidate logic_code
+    :type login_code: str
 
     :rtype: GetJobObject
     """
 
     impl = serviceImpl()
 
-    return impl.get_jobs(accept_version)
+    return impl.get_jobs(accept_version, email, login_code)
 
 
 

@@ -72,6 +72,75 @@ paths:
       tags:
       - audio
       x-openapi-router-controller: openapi_server.controllers.audio_controller
+  /candidates:
+    get:
+      description: This API is used to get candidate and question details
+      operationId: get_candidate_questions
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      - description: The candidate email
+        explode: true
+        in: query
+        name: email
+        required: false
+        schema:
+          format: email
+          type: string
+        style: form
+      - description: The candidate logic_code
+        explode: true
+        in: query
+        name: login_code
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCandidateObject'
+          description: Candidate details retrieved successfully
+      summary: To get the candidate and question details
+      tags:
+      - candidate
+      x-openapi-router-controller: openapi_server.controllers.candidate_controller
+    post:
+      description: This API is used to store shortlisted candidates
+      operationId: save_candidates
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidateRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/save_candidates_200_response'
+          description: Candidate data saved successfully
+      summary: To store candidate data
+      tags:
+      - candidate
+      x-openapi-router-controller: openapi_server.controllers.candidate_controller
   /docs/swagger_ui:
     get:
       description: ""
@@ -111,6 +180,24 @@ paths:
           default: v1
           type: string
         style: simple
+      - description: The candidate email
+        explode: true
+        in: query
+        name: email
+        required: false
+        schema:
+          format: email
+          type: string
+        style: form
+      - description: The candidate logic_code
+        explode: true
+        in: query
+        name: login_code
+        required: false
+        schema:
+          format: email
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -465,6 +552,21 @@ components:
           format: email
           type: string
       title: JobRequest
+    CandidateRequest:
+      example:
+        name: name
+        email: email
+        jobid: jobid
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        jobid:
+          type: integer
+      title: CandidateRequest
+      type: object
     AudioObject:
       example:
         message: message
@@ -562,6 +664,26 @@ components:
           type: string
       title: GetUserDataObject
       type: object
+    GetCandidateObject:
+      example:
+        name: name
+        email: email
+        role: role
+        questions: questions
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        role:
+          type: string
+        questions:
+          items:
+            type: string
+          type: array
+      title: GetCandidateObject
+      type: object
     users_model:
       properties:
         id:
@@ -585,6 +707,14 @@ components:
         date:
           format: date-time
           type: string
+    save_candidates_200_response:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      title: save_candidates_200_response
+      type: object
   securitySchemes:
     basicAuth:
       description: Requests should pass credentials in header
