@@ -7,6 +7,8 @@ from openapi_server.dbmodels.db_jobs import Db_Jobs
 from openapi_server.dbmodels.db_questions import Db_Questions
 from openapi_server.models.save_job_object import SaveJobObject
 
+# import fitz
+
 from sqlalchemy import text
 from flask import request
 from werkzeug.utils import secure_filename
@@ -32,6 +34,13 @@ from itertools import cycle
 import csv
 import os
 import warnings
+from unidecode import unidecode 
+import numpy as np
+import re 
+import pandas as pd
+from nltk.tokenize import word_tokenize
+from nltk.tokenize import sent_tokenize
+
 
 from openapi_server.models.error import Error
 from openapi_server.config import (
@@ -48,6 +57,12 @@ class Jd_controller_Impl:
     resumeText = ''
     resumeWords = ''
     stwords = ''
+    bad_chars = ['\n', '\t', '*', "%"]
+
+    lines = []
+    words = []
+    upper_words = []
+    upper_lines = []
 
     __controller__ = "Jd"
     logger = get_logger()
@@ -68,10 +83,10 @@ class Jd_controller_Impl:
                 self.logger.info("filename = "+ jdfilename)
                 now = datetime.now() # current date and time
                 date_time = now.strftime("%Y_%m_%d_%H_%M_%S_")
-                jdfilename = date_time + jdfilename
-                self.logger.info("new filename = "+ jdfilename)
+                newjdfilename = date_time + jdfilename
+                self.logger.info("new filename = "+ newjdfilename)
 
-                jdpath = os.path.join(os.getcwd() + self.JD_UPLOAD_DIR, jdfilename)
+                jdpath = os.path.join(os.getcwd() + self.JD_UPLOAD_DIR, newjdfilename)
                 jdBlobData.save(jdpath)
                 time.sleep(5)
 
@@ -82,16 +97,18 @@ class Jd_controller_Impl:
                     resumeBlobData = request.files["resume_"+str(i)]
                     resumefilename = secure_filename(resumeBlobData.filename)
                     self.logger.info("resume filename = "+ resumefilename)
-                    resumefilename = date_time + resumefilename
-                    self.logger.info("new resume filename = "+ resumefilename)
+                    newresumefilename = date_time + resumefilename
+                    self.logger.info("new resume filename = "+ newresumefilename)
 
-                    resumepath = os.path.join(os.getcwd() + self.RESUME_UPLOAD_DIR, resumefilename)
+                    resumepath = os.path.join(os.getcwd() + self.RESUME_UPLOAD_DIR, newresumefilename)
                     resumeBlobData.save(resumepath)
 
                     time.sleep(5)
                     self.extractTextFromResume(resumepath)
-                    result = self.findResumeMatches(jdpath, resumefilename.split(".")[0])
-                    final_analysis[resumefilename.split(".")[0]] = result
+
+                    result = self.findResumeMatches(jdfilename, jdpath, newresumefilename.split(".")[0], resumepath)
+                    
+                    final_analysis[resumefilename.split("-")[0]] = result
 
                 #response = flask.jsonify("success")
                 # response.headers.add('Access-Control-Allow-Origin', ['http://localhost:3000', 'http://localhost:8080'])
@@ -99,35 +116,9 @@ class Jd_controller_Impl:
                 return final_analysis
                 # return HttpResponse(newfilename,content_type="application/json")
 
-            except:
-                pass
-
-    def upload_jd_remove(self):
-        self.logger.info("inside upload jd")
-        try:
-            current_folder = os.getcwd().split("\\server_impl")[0]
-            # UPLOAD JD
-            jdfilename = 'SDET_JD.pdf'
-            jdpath = os.path.join(current_folder + self.JD_UPLOAD_DIR, jdfilename)
-            time.sleep(5)
-
-            resumefilename = 'resume.pdf'
-            resumepath = os.path.join(current_folder + self.RESUME_UPLOAD_DIR, resumefilename)
-            print(resumepath)
-
-            time.sleep(5)
-            self.extractTextFromResume(resumepath)
-            self.findResumeMatches(jdpath)
-
-            response = flask.jsonify("success")
-            # response.headers.add('Access-Control-Allow-Origin', ['http://localhost:3000', 'http://localhost:8080'])
-            return response
-            # return HttpResponse(newfilename,content_type="application/json")
-
-        except Exception as ex:
-            self.logger.error(ex, exc_info=True)
-            return Error(code=500, message=ex)
-
+            except Exception as ex:
+                self.logger.error(ex, exc_info=True)
+                return Error(code=500, message=ex)
 
     def resume_matcher(self):
         pass
@@ -187,7 +178,7 @@ class Jd_controller_Impl:
         print(self.resumeWords)
         print()
 
-    def findResumeMatches(self, jdFileName, resumeFileName):
+    def findResumeMatches(self, originalJDfilename, jdFileName, resumeFileName, resumepath):
 
         '''
         Go through the job listings and extract the text that represents the job description
@@ -208,10 +199,10 @@ class Jd_controller_Impl:
             p = ' '.join(map(str, positionText))
             positionWords = self.getWordCount(p, 15, '')
 
-            keywordSimi, sentSimi, overallSimi = self.getResumeMatchScore(csvRows, self.resume, positionText, self.resumeWords, positionWords)
+            keywordSimi = self.getResumeMatchScore(csvRows, self.resume, positionText, self.resumeWords, positionWords)
             recWords = self.recommendKeyWords(positionWords)
 
-            self.allData.append([csvRows[0], keywordSimi, sentSimi, overallSimi, recWords])
+            self.allData.append([csvRows[0], keywordSimi, recWords])
 
             '''
             # Column Names in the excel file
@@ -237,9 +228,32 @@ class Jd_controller_Impl:
             '''
 
             result = {}
+
+            print("resumepath"+ str(resumepath))
+            # doc = fitz.open(resumepath)
+            # for page in doc:
+            #     output = page.get_text("blocks")                   
+            #     previous_block_id = 0 # Set a variable to mark the block id
+            #     for block in output:
+            #         if block[6] == 0: # We only take the text
+            #             plain_text = unidecode(block[4])
+            #             plain_text = ''.join(i for i in plain_text if not i in bad_chars)
+            #             if plain_text != '':
+            #                 lines.append(sent_tokenize(plain_text.strip()))
+            #                 upper_lines.extend(sent_tokenize(plain_text.upper()))
+            #                 words.append(word_tokenize(plain_text))
+            #                 upper_words.extend(word_tokenize(plain_text.upper()))
+
+            # for word in words:
+            #     candidate_email = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', word).group(0)
+            #     break
+
+
+            result["job_id"]=originalJDfilename.split("-")[0]
+            result["email"]="nsaudagar1989@gmail.com"
             result["resume_matched_percentage"]=keywordSimi
-            result["experience_matched_percentage"]=sentSimi
-            result["overall_matched"]=overallSimi
+            # result["experience_matched_percentage"]=sentSimi
+            # result["overall_matched"]=overallSimi
             result["recommended_words_in_resume"]=recWords
 
             return result
@@ -322,38 +336,38 @@ class Jd_controller_Impl:
         calculate the average of those values 
         '''
 
-        maxSentSims = []
+        # maxSentSims = []
 
-        for line in resume:
+        # for line in resume:
 
-            if len(line) >= 30:
+        #     if len(line) >= 30:
 
-                sentSims = []
-                sents = []
+        #         sentSims = []
+        #         sents = []
 
-                for sent in positionText:
+        #         for sent in positionText:
 
-                    if len(sent) >= 10:
+        #             if len(sent) >= 10:
 
-                        s = self.sentenceSimilarity(line, sent)
-                        sentSims.append(s)
-                        sents.append(line + ' ' + sent)
+        #                 s = self.sentenceSimilarity(line, sent)
+        #                 sentSims.append(s)
+        #                 sents.append(line + ' ' + sent)
 
-                maxSentSims.append(max(sentSims))
-
-
-        maxSentSims.sort(reverse=True)
-        sentSimilarity = round(sum(maxSentSims[0:15]) / len(maxSentSims[0:15]) * 100, 2)
-
-        overallSimilarity += sentSimilarity
+        #         maxSentSims.append(max(sentSims))
 
 
-        print('Sentence Similarity:', sentSimilarity)
+        # maxSentSims.sort(reverse=True)
+        # sentSimilarity = round(sum(maxSentSims[0:15]) / len(maxSentSims[0:15]) * 100, 2)
 
-        print('\nOverall Score:', overallSimilarity)
+        # overallSimilarity += sentSimilarity
+
+
+        # print('Sentence Similarity:', sentSimilarity)
+
+        # print('\nOverall Score:', overallSimilarity)
         print()
 
-        return keyWordSimilarity, sentSimilarity, overallSimilarity
+        return keyWordSimilarity#, sentSimilarity, overallSimilarity
 
     def recommendKeyWords(self, positionWords):
 
