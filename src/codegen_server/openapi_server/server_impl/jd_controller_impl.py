@@ -14,6 +14,7 @@ import os
 import time
 import json
 from django.http import HttpResponse
+import numpy as np
 
 from datetime import datetime
 
@@ -54,7 +55,20 @@ class Jd_controller_Impl:
                 jdBlobData.save(jdpath)
                 time.sleep(5)
 
-                #Upload Resume
+                # UPLOAD RESUMES
+                resumeCount = request.form.get('resumecount')
+                for i in range(0, int(resumeCount)):
+                    resumeBlobData = request.files["resume_"+str(i)]
+                    resumefilename = secure_filename(resumeBlobData.filename)
+                    self.logger.info("resume filename = "+ resumefilename)
+                    resumefilename = date_time + resumefilename
+                    self.logger.info("new resume filename = "+ resumefilename)
+
+                    resumepath = os.path.join(os.getcwd() + self.RESUME_UPLOAD_DIR, resumefilename)
+                    resumeBlobData.save(resumepath)
+                time.sleep(5)
+
+                response = flask.jsonify("success")
                 # response.headers.add('Access-Control-Allow-Origin', ['http://localhost:3000', 'http://localhost:8080'])
                 return response
                 # return HttpResponse(newfilename,content_type="application/json")
@@ -68,57 +82,57 @@ class Jd_controller_Impl:
 
     def extractTextFromResume():
 
-    global resume
-    global stopwords2
-    global resumeText
-    global resumeWords
-    global stwords
+        global resume
+        global stopwords2
+        global resumeText
+        global resumeWords
+        global stwords
 
-    # Parsing the resume and extracting the text from it
+        # Parsing the resume and extracting the text from it
 
-    pdfFileObj = open('resume.pdf', 'rb')
-    pdfReader = PyPDF2.PdfReader(pdfFileObj)
-    pageObj = pdfReader.pages[0]
-    stwords = set(stopwords.words('english'))
+        pdfFileObj = open('resume.pdf', 'rb')
+        pdfReader = PyPDF2.PdfReader(pdfFileObj)
+        pageObj = pdfReader.pages[0]
+        stwords = set(stopwords.words('english'))
 
-    rawPageText = pageObj.extract_text().replace('\n', '')
-    rawPageText = rawPageText.split('  ')
-    pageText = []
-
-
-    for line in rawPageText:
-
-        if len(line) > 0:
-            pageText.append(line)
+        rawPageText = pageObj.extract_text().replace('\n', '')
+        rawPageText = rawPageText.split('  ')
+        pageText = []
 
 
-    for line in pageText:
+        for line in rawPageText:
 
-        tokens = sent_tokenize(line)
-
-        for line in tokens:
-
-            if len(line) > 1 and line[0] == ' ': line = line[1:]
-            resume.append(line)
+            if len(line) > 0:
+                pageText.append(line)
 
 
-    '''
-    Load in the list of stopwords
-    These are words we do not want to be included in the analysis
-    '''
+        for line in pageText:
 
-    j = open("stopwords2.txt", "r", encoding="utf8")
+            tokens = sent_tokenize(line)
 
-    for line in j:
-        if len(line) > 1:
-            stopwords2.append(line.replace('\n', ''))
+            for line in tokens:
+
+                if len(line) > 1 and line[0] == ' ': line = line[1:]
+                resume.append(line)
 
 
-    resumeText = ' '.join(map(str, pageText))
-    resumeWords = getWordCount(resumeText, 15, '')
+        '''
+        Load in the list of stopwords
+        These are words we do not want to be included in the analysis
+        '''
 
-    print('\nMost common words in your resume:\n')
-    print(resumeWords)
-    print()
+        j = open("stopwords2.txt", "r", encoding="utf8")
+
+        for line in j:
+            if len(line) > 1:
+                stopwords2.append(line.replace('\n', ''))
+
+
+        resumeText = ' '.join(map(str, pageText))
+        resumeWords = getWordCount(resumeText, 15, '')
+
+        print('\nMost common words in your resume:\n')
+        print(resumeWords)
+        print()
 
 
