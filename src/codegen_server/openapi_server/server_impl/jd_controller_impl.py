@@ -14,6 +14,7 @@ import os
 import time
 import json
 from django.http import HttpResponse
+import numpy as np
 
 from datetime import datetime
 
@@ -46,6 +47,20 @@ class Jd_controller_Impl:
 
                 jdpath = os.path.join(os.getcwd() + self.JD_UPLOAD_DIR, jdfilename)
                 jdBlobData.save(jdpath)
+                time.sleep(5)
+
+
+                # UPLOAD RESUMES
+                resumeCount = request.form.get('resumecount')
+                for i in range(0, int(resumeCount)):
+                    resumeBlobData = request.files["resume_"+str(i)]
+                    resumefilename = secure_filename(resumeBlobData.filename)
+                    self.logger.info("resume filename = "+ resumefilename)
+                    resumefilename = date_time + resumefilename
+                    self.logger.info("new resume filename = "+ resumefilename)
+
+                    resumepath = os.path.join(os.getcwd() + self.RESUME_UPLOAD_DIR, resumefilename)
+                    resumeBlobData.save(resumepath)
                 time.sleep(5)
 
                 response = flask.jsonify("success")
