@@ -67,6 +67,7 @@ class Job_controller_Impl:
 
     @wrap(log_entering, log_exiting)
     def save_job(self, accept_version, job_request):
+        #Db_Jobs().delete()
         version_info = utils.get_api_version(accept_version)
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             try:

@@ -1,5 +1,7 @@
 from openapi_server.app_context import db
 
+from sqlalchemy import text
+
 class Db_Jobs(db.Model):
     __tablename__ = "jobs"
 
@@ -15,7 +17,9 @@ class Db_Jobs(db.Model):
         db.session.commit()
 
     def delete(self):
-        db.session.delete(self)
+        db.session.execute(text(
+            'delete from jobs'
+        ))
         db.session.commit()
 
     @staticmethod
