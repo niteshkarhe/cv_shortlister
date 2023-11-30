@@ -2,9 +2,11 @@ from openapi_server.wrappers.wrapper import wrap
 from openapi_server.wrappers.standard import log_entering, log_exiting
 from openapi_server.app_context import app, db, get_logger
 from openapi_server.utils.utilities import utils
+from openapi_server.models.send_email_object import SendEmailObject
 
 import smtplib
 from email.message import EmailMessage
+from flask import jsonify, make_response
 
 from openapi_server.models.error import Error
 from openapi_server.config import (
@@ -20,7 +22,7 @@ class Email_controller_Impl:
         version_info = utils.get_api_version(accept_version)
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             try:
-                body='''
+                message='''
                             <!DOCTYPE html>
                             <html>
                             <!-- Complete Email template -->
@@ -68,7 +70,7 @@ class Email_controller_Impl:
                             <p>
                             Login Email: [''' + email_request.email + ''']
                             </p>
-                            Login Code: [''' + email_request.login_code + ''']
+                            Login Code: [''' + str(email_request.login_code) + ''']
                             <p>
                             Interview Link: [http://localhost:8989]
                             </p>
@@ -178,10 +180,12 @@ class Email_controller_Impl:
 
                 message = f'{message}\n'
                 msg.set_content(message, subtype='html')
-                msg['Subject'] = 'Your resume is shortlisted'
+                msg['Subject'] = '[Global Payments] Your resume is shortlisted'
                 msg['From'] = 'me123@gmail.com'
                 msg['To'] = email_request.email
                 server.send_message(msg)
+
+                return SendEmailObject(message="Email is sent successfully to [" + email_request.email + "]"), 200
 
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
