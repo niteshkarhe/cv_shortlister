@@ -44,14 +44,14 @@ def init_app(application):
     dbpath = os.path.join(dbdir, "cvscanner.db")
     db_uri = "sqlite:///cvscanner.db"
 
-    connection = sqlite3.connect("cvscanner.db")
-    cursor = connection.cursor()
+    #connection = sqlite3.connect("cvscanner.db")
+    #cursor = connection.cursor()
     #create_table = "CREATE TABLE users (id integer, email text, name text, role text, question text, answer text, percentage integer, result text, recordingpath text, date datetime)"
     #create_table = "CREATE TABLE questions (id integer, role text, hr_email text, question text, expected_answer text)"
-    create_table = "CREATE TABLE jobs (id integer, role text, hr_email text)"
+    #create_table = "CREATE TABLE jobs (id integer, role text, hr_email text)"
     #create_table = "CREATE TABLE candidates (id integer, name text, email text, jobid integer, resume_matched_percentage text, is_shortlisted text, FOREIGN KEY(jobid) REFERENCES jobs(id))"
     #drop_table = "DROP TABLE jobs"
-    cursor.execute(create_table)
+    #cursor.execute(create_table)
 
     applogger.info("Initializing API")
     app.config['Content-Type'] = 'application/json'
