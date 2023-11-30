@@ -47,6 +47,10 @@ def init_app(application):
     #cursor.execute(create_table)
 
     applogger.info("Initializing API")
+    app.config['Content-Type'] = 'application/json'
+    app.config['Access-Control-Allow-Origin'] = ['http://localhost:3000', 'http://localhost:8080']
+    app.config['Access-Control-Allow-Methods'] = ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE']
+    app.config['Access-Control-Allow-Headers'] = ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Request-With']
     app.config['SECRET_KEY'] = 'MySecretKeyNeedsToBeChanged'
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
