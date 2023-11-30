@@ -1,6 +1,8 @@
 from openapi_server.app_context import db
 from openapi_server.dbmodels.db_jobs import Db_Jobs
 
+from sqlalchemy import text
+
 class Db_Candidates(db.Model):
     __tablename__ = "candidates"
 
@@ -8,8 +10,8 @@ class Db_Candidates(db.Model):
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False)
     jobid = db.Column(db.Integer, nullable=False)
-    resume_matched_percentage = db.Column(db.String(50), nullable=False)
-    is_shorlisted = db.Column(db.String(50), nullable=True)
+    resumepercentage = db.Column(db.String(50), nullable=True)
+    isshortlisted = db.Column(db.String(50), nullable=True)
 
     def __repr__(self):
         return "candidates"
@@ -19,7 +21,9 @@ class Db_Candidates(db.Model):
         db.session.commit()
 
     def delete(self):
-        db.session.delete(self)
+        db.session.execute(text(
+            'delete from candidates'
+        ))
         db.session.commit()
 
     @staticmethod

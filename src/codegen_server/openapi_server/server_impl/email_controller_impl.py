@@ -58,7 +58,7 @@ class Email_controller_Impl:
                             padding-bottom: 12px;"> 
                             <p style="color:black
                             font-weight:bold;"> 
-                            Dear Candidate ,
+                            Dear ''' + email_request.name + ''' ,
                             </p>
                             
                             We are pleased to inform you that your application for the position [''' + email_request.role + '''] at [Global Payments] has been successful, and we would like to invite you for a job interview.
@@ -169,20 +169,19 @@ class Email_controller_Impl:
                             
                             </html>
                         '''
-                def send_email_gmail(subject, message, destination):
-                    server = smtplib.SMTP('smtp.gmail.com', 587)
-                    server.starttls()
-                    #This is where you would replace your password with the app password
-                    server.login('service.punebot@gmail.com', 'nrdnfjcpruhgysni')
+                server = smtplib.SMTP('smtp.gmail.com', 587)
+                server.starttls()
+                #This is where you would replace your password with the app password
+                server.login('service.punebot@gmail.com', 'nrdnfjcpruhgysni')
 
-                    msg = EmailMessage()
+                msg = EmailMessage()
 
-                    message = f'{message}\n'
-                    msg.set_content(message, subtype='html')
-                    msg['Subject'] = subject
-                    msg['From'] = 'me123@gmail.com'
-                    msg['To'] = destination
-                    server.send_message(msg)
+                message = f'{message}\n'
+                msg.set_content(message, subtype='html')
+                msg['Subject'] = 'Your resume is shortlisted'
+                msg['From'] = 'me123@gmail.com'
+                msg['To'] = email_request.email
+                server.send_message(msg)
 
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
