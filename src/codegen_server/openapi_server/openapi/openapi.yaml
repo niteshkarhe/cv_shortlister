@@ -539,7 +539,7 @@ components:
         file:
           format: binary
           type: string
-      title: AudioBlobRequest
+      title: JDRequest
       type: object
     UserRequest:
       example:

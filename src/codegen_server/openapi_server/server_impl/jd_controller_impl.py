@@ -23,6 +23,12 @@ from openapi_server.config import (
 )
 
 class Jd_controller_Impl:
+    resume = []
+    stopwords2 = []
+    resumeText = ''
+    resumeWords = ''
+    stwords = ''
+
     __controller__ = "Jd"
     logger = get_logger()
     JD_UPLOAD_DIR = "\\uploaded_jd"
@@ -48,7 +54,7 @@ class Jd_controller_Impl:
                 jdBlobData.save(jdpath)
                 time.sleep(5)
 
-                response = flask.jsonify("success")
+                #Upload Resume
                 # response.headers.add('Access-Control-Allow-Origin', ['http://localhost:3000', 'http://localhost:8080'])
                 return response
                 # return HttpResponse(newfilename,content_type="application/json")
@@ -56,4 +62,63 @@ class Jd_controller_Impl:
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
                 return Error(code=500, message=ex)
+
+    def resume_matcher(self):
+        pass
+
+    def extractTextFromResume():
+
+    global resume
+    global stopwords2
+    global resumeText
+    global resumeWords
+    global stwords
+
+    # Parsing the resume and extracting the text from it
+
+    pdfFileObj = open('resume.pdf', 'rb')
+    pdfReader = PyPDF2.PdfReader(pdfFileObj)
+    pageObj = pdfReader.pages[0]
+    stwords = set(stopwords.words('english'))
+
+    rawPageText = pageObj.extract_text().replace('\n', '')
+    rawPageText = rawPageText.split('  ')
+    pageText = []
+
+
+    for line in rawPageText:
+
+        if len(line) > 0:
+            pageText.append(line)
+
+
+    for line in pageText:
+
+        tokens = sent_tokenize(line)
+
+        for line in tokens:
+
+            if len(line) > 1 and line[0] == ' ': line = line[1:]
+            resume.append(line)
+
+
+    '''
+    Load in the list of stopwords
+    These are words we do not want to be included in the analysis
+    '''
+
+    j = open("stopwords2.txt", "r", encoding="utf8")
+
+    for line in j:
+        if len(line) > 1:
+            stopwords2.append(line.replace('\n', ''))
+
+
+    resumeText = ' '.join(map(str, pageText))
+    resumeWords = getWordCount(resumeText, 15, '')
+
+    print('\nMost common words in your resume:\n')
+    print(resumeWords)
+    print()
+
 
