@@ -51,6 +51,7 @@ class Jd_controller_Impl:
 
     __controller__ = "Jd"
     logger = get_logger()
+
     JD_UPLOAD_DIR = "\\uploaded_jd"
     RESUME_UPLOAD_DIR = "\\uploaded_resume"
 
@@ -90,9 +91,6 @@ class Jd_controller_Impl:
                     time.sleep(5)
                     self.extractTextFromResume(resumepath)
                     result = self.findResumeMatches(jdpath, resumefilename.split(".")[0])
-                    key_word_similarity = result[0]
-                    sentence_similarity = result[1]
-                    overall_similarity = result[2]
                     final_analysis[resumefilename.split(".")[0]] = result
 
                 #response = flask.jsonify("success")
@@ -101,9 +99,8 @@ class Jd_controller_Impl:
                 return final_analysis
                 # return HttpResponse(newfilename,content_type="application/json")
 
-            except Exception as ex:
-                self.logger.error(ex, exc_info=True)
-                return Error(code=500, message=ex)
+            except:
+                pass
 
     def upload_jd_remove(self):
         self.logger.info("inside upload jd")
@@ -216,10 +213,12 @@ class Jd_controller_Impl:
 
             self.allData.append([csvRows[0], keywordSimi, sentSimi, overallSimi, recWords])
 
+            '''
             # Column Names in the excel file
             fields = 'Job Description, KeyWord Similarity, Sentence Similarity, Overall Similarity, Recommended Words\n'
 
             # Name of Excel file
+            now = datetime.now()
             date_time = now.strftime("%Y_%m_%d_%H_%M_%S_")
             fileName = "Resume matcher analysis_" + resumeFileName + "_.csv"
             analysisFilePath = os.path.join(os.getcwd() + self.RESUME_UPLOAD_DIR, fileName)
@@ -235,19 +234,19 @@ class Jd_controller_Impl:
                 MyFile.write('\n')
 
             MyFile.close()
+            '''
 
-            result = []
-            result.append(keywordSimi)
-            result.append(sentSimi)
-            result.append(overallSimi)
+            result = {}
+            result["resume_matched_percentage"]=keywordSimi
+            result["experience_matched_percentage"]=sentSimi
+            result["overall_matched"]=overallSimi
+            result["recommended_words_in_resume"]=recWords
 
             return result
 
-        except:
-            pass
-
-        path = os.getcwd()
-        print('\nSaved as ' + path + '\\' + fileName)
+        except Exception as ex:
+            self.logger.error(ex, exc_info=True)
+            return Error(code=500, message=ex)
 
     def getJdText(self, jdfilename):
         jdpath = os.path.join(os.getcwd() + self.JD_UPLOAD_DIR, jdfilename)
@@ -362,7 +361,7 @@ class Jd_controller_Impl:
         Recommend key words you should add to your resume
         '''
 
-        resumeWordsList = [item for sublist in resumeWords for item in sublist if type(item) == str]
+        resumeWordsList = [item for sublist in self.resumeWords for item in sublist if type(item) == str]
         recommendedWords = []
 
         for word in positionWords:
@@ -496,6 +495,3 @@ class Jd_controller_Impl:
             return wn.synsets(word, wn_tag)[0]
         except:
             return None
-
-
-Jd_controller_Impl().upload_jd_remove()
