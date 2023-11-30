@@ -33,7 +33,7 @@ class Question_controller_Impl:
                 return SaveQuestionObject(message="Question details saved successfully"), 200
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
-                return Error(code=500, message=ex)
+                return Error(code=500, message=ex), 500
 
     @wrap(log_entering, log_exiting)
     def update_question(self, accept_version, question_request):

@@ -7,7 +7,9 @@ class Db_Candidates(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False)
-    jobid = db.Column(db.String(50), nullable=False)
+    jobid = db.Column(db.Integer, nullable=False)
+    resume_matched_percentage = db.Column(db.String(50), nullable=False)
+    is_shorlisted = db.Column(db.String(50), nullable=True)
 
     def __repr__(self):
         return "candidates"

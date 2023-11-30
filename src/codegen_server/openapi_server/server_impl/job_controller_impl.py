@@ -73,8 +73,10 @@ class Job_controller_Impl:
                 if Db_Questions.get_role_questions(role=job_request.role) is None:
                     self.logger.error("Input role is not defined in questions table", exc_info=True)
                     return Error(code=404, message="No role named: [" + job_request.role + "] is defined in questions table. Please add the role and its questionnaires in questions table first."), 404
-                db_jobs_obj = Db_Jobs(role=job_request.role,
-                                      hr_email=job_request.hr_email)
+                db_jobs_obj = Db_Jobs(
+                    id=job_request.id,
+                    role=job_request.role,
+                    hr_email=job_request.hr_email)
                 db_jobs_obj.add()
 
                 return SaveJobObject(message="Job is saved successfully"), 200

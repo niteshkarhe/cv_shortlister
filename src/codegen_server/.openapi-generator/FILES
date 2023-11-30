@@ -8,8 +8,9 @@ openapi_server/__init__.py
 openapi_server/__main__.py
 openapi_server/controllers/__init__.py
 openapi_server/controllers/audio_controller.py
-openapi_server/controllers/jd_controller.py
 openapi_server/controllers/candidate_controller.py
+openapi_server/controllers/email_controller.py
+openapi_server/controllers/jd_controller.py
 openapi_server/controllers/job_controller.py
 openapi_server/controllers/question_controller.py
 openapi_server/controllers/security_controller.py
@@ -22,6 +23,7 @@ openapi_server/models/audio_object.py
 openapi_server/models/audio_request.py
 openapi_server/models/base_model.py
 openapi_server/models/candidate_request.py
+openapi_server/models/email_request.py
 openapi_server/models/error.py
 openapi_server/models/get_candidate_object.py
 openapi_server/models/get_job_object.py
@@ -33,6 +35,7 @@ openapi_server/models/respone_object.py
 openapi_server/models/save_candidates200_response.py
 openapi_server/models/save_job_object.py
 openapi_server/models/save_question_object.py
+openapi_server/models/send_email_object.py
 openapi_server/models/status.py
 openapi_server/models/user_object.py
 openapi_server/models/user_request.py

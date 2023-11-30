@@ -5,6 +5,7 @@ from openapi_server.app_context import app, db, get_logger
 from openapi_server.utils.utilities import utils
 from openapi_server.dbmodels.db_jobs import Db_Jobs
 from openapi_server.dbmodels.db_questions import Db_Questions
+from openapi_server.dbmodels.db_candidates import Db_Candidates
 from openapi_server.models.save_job_object import SaveJobObject
 
 from sqlalchemy import text
