@@ -3,7 +3,7 @@ from openapi_server.app_context import db
 class Db_Jobs(db.Model):
     __tablename__ = "jobs"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     role = db.Column(db.String(50), nullable=False)
     hr_email = db.Column(db.String(50), nullable=False)
 

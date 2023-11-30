@@ -167,6 +167,35 @@ paths:
       tags:
       - swagger_ui
       x-openapi-router-controller: openapi_server.controllers.swagger_ui_controller
+  /email:
+    post:
+      description: This API is used to send email to shortlisted candidates
+      operationId: send_email
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailObject'
+          description: Email sent successfully
+      summary: To send email to shortlisted candidates
+      tags:
+      - email
+      x-openapi-router-controller: openapi_server.controllers.email_controller
   /jd/upload:
     post:
       description: This API is used to upload JD
@@ -581,9 +610,12 @@ components:
       title: QuestionRequest
     JobRequest:
       example:
+        id: "id,"
         role: role
         hr_email: hr_email
       properties:
+        id:
+          type: integer
         role:
           type: string
         hr_email:
@@ -602,6 +634,8 @@ components:
         name: name
         email: email
         jobid: jobid
+        resume_matched_percentage: resume_matched_percentage
+        is_shortlisted: is_shortlisted
       properties:
         name:
           type: string
@@ -610,7 +644,29 @@ components:
           type: string
         jobid:
           type: integer
+        resume_matched_percentage:
+          type: string
+        is_shortlisted:
+          type: string
       title: CandidateRequest
+      type: object
+    EmailRequest:
+      example:
+        name: name
+        role: role
+        email: email
+        login_code: login_code
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        email:
+          format: email
+          type: string
+        login_code:
+          type: integer
+      title: EmailRequest
       type: object
     AudioObject:
       example:
@@ -759,6 +815,14 @@ components:
         message:
           type: string
       title: save_candidates_200_response
+      type: object
+    SendEmailObject:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      title: SendEmailObject
       type: object
   securitySchemes:
     basicAuth:

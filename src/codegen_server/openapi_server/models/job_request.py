@@ -12,24 +12,29 @@ class JobRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, role=None, hr_email=None):  # noqa: E501
+    def __init__(self, id=None, role=None, hr_email=None):  # noqa: E501
         """JobRequest - a model defined in OpenAPI
 
+        :param id: The id of this JobRequest.  # noqa: E501
+        :type id: int
         :param role: The role of this JobRequest.  # noqa: E501
         :type role: str
         :param hr_email: The hr_email of this JobRequest.  # noqa: E501
         :type hr_email: str
         """
         self.openapi_types = {
+            'id': int,
             'role': str,
             'hr_email': str
         }
 
         self.attribute_map = {
+            'id': 'id',
             'role': 'role',
             'hr_email': 'hr_email'
         }
 
+        self._id = id
         self._role = role
         self._hr_email = hr_email
 
@@ -43,6 +48,27 @@ class JobRequest(Model):
         :rtype: JobRequest
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def id(self) -> int:
+        """Gets the id of this JobRequest.
+
+
+        :return: The id of this JobRequest.
+        :rtype: int
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id: int):
+        """Sets the id of this JobRequest.
+
+
+        :param id: The id of this JobRequest.
+        :type id: int
+        """
+
+        self._id = id
 
     @property
     def role(self) -> str:

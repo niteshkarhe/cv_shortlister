@@ -33,12 +33,13 @@ class Question_controller_Impl:
                 return SaveQuestionObject(message="Question details saved successfully"), 200
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
-                return Error(code=500, message=ex)
+                return Error(code=500, message=ex), 500
 
     @wrap(log_entering, log_exiting)
     def update_question(self, accept_version, question_request):
         question = ''
         expected_answer = ''
+        role = ''
         version_info = utils.get_api_version(accept_version)
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             try:
@@ -46,6 +47,9 @@ class Question_controller_Impl:
                     question = question_request.question
                 elif question_request.expected_answer is not None:
                     expected_answer = question_request.expected_answer
+                elif question_request.role is not None:
+                    role = question_request.role
+
                 if len(question) > 0:
                     db.session.execute(text(
                         "update questions set question = '" + question + "' where id = " + str(question_request.id)
@@ -56,8 +60,14 @@ class Question_controller_Impl:
                         "update questions set expected_answer = '" + expected_answer + "' where id = " + str(question_request.id)
                     ))
                     db.session.commit()
+                elif len(role) > 0:
+                    db.session.execute(text(
+                        "update questions set role = '" + role + "' where id = " + str(question_request.id)
+                    ))
+                    db.session.commit()
                 else:
                     return Error(code=404, message="Both input question and expected_answer are not correctly sent from request"), 400
+
                 return SaveQuestionObject(message="Questions table updated successfully"), 200
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
