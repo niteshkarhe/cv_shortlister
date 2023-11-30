@@ -5,7 +5,9 @@ from openapi_server.app_context import app, db, get_logger
 from openapi_server.utils.utilities import utils
 from openapi_server.dbmodels.db_jobs import Db_Jobs
 from openapi_server.dbmodels.db_questions import Db_Questions
+from openapi_server.dbmodels.db_candidates import Db_Candidates
 from openapi_server.models.save_job_object import SaveJobObject
+from openapi_server.server_impl.candidate_controller_impl import Candidate_controller_Impl
 
 # import fitz
 
@@ -34,7 +36,7 @@ from itertools import cycle
 import csv
 import os
 import warnings
-from unidecode import unidecode 
+#from unidecode import unidecode
 import numpy as np
 import re 
 import pandas as pd
@@ -123,15 +125,17 @@ class Jd_controller_Impl:
                     
                     final_analysis[resumefilename.split("-")[0]] = result
 
+
                 #response = flask.jsonify("success")
                 # response.headers.add('Access-Control-Allow-Origin', ['http://localhost:3000', 'http://localhost:8080'])
                 #return response
+                Candidate_controller_Impl().save_scanned_candidates(final_analysis)
                 return final_analysis
                 # return HttpResponse(newfilename,content_type="application/json")
 
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
-                return Error(code=500, message=ex)
+                return Error(code=500, message=ex), 500
 
     def resume_matcher(self):
         pass
