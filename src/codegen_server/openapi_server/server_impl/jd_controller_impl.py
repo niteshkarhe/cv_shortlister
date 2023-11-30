@@ -129,7 +129,10 @@ class Jd_controller_Impl:
                 #response = flask.jsonify("success")
                 # response.headers.add('Access-Control-Allow-Origin', ['http://localhost:3000', 'http://localhost:8080'])
                 #return response
-                Candidate_controller_Impl().save_scanned_candidates(final_analysis)
+                candidate_id_dict = Candidate_controller_Impl().save_scanned_candidates(final_analysis)
+                for key, value in final_analysis.items():
+                    value['login_code'] = candidate_id_dict[key]
+
                 return final_analysis
                 # return HttpResponse(newfilename,content_type="application/json")
 

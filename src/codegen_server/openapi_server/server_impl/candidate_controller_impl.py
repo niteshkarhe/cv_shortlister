@@ -72,8 +72,8 @@ class Candidate_controller_Impl:
                     name=candidate_request.name,
                     email=candidate_request.email,
                     jobid=candidate_request.jobid,
-                    resume_matched_percentage=candidate_request.resume_matched_percentage,
-                    is_shortlisted=candidate_request.is_shortlisted
+                    resumepercentage=candidate_request.resumepercentage,
+                    isshortlisted=candidate_request.isshortlisted
                 )
 
                 db_candidates_obj.add()
@@ -84,22 +84,27 @@ class Candidate_controller_Impl:
 
     def save_scanned_candidates(self, analyzed_candidates):
         for key, value in analyzed_candidates.items():
-            candidate_name = key.replace("-", " ")
+            candidate_id_dict = {}
+            candidate_name = key.replace("_", " ")
             jobid = int(value["job_id"])
             email = value["email"]
-            resume_matched_percentage = value["resume_matched_percentage"]
-            is_shortlisted = ""
+            resumepercentage = value["resume_matched_percentage"]
+            isshortlisted = ""
 
             try:
                 db_candidates_obj = Db_Candidates(
                     name=candidate_name,
                     email=email,
                     jobid=jobid,
-                    resume_matched_percentage=resume_matched_percentage,
-                    is_shortlisted=is_shortlisted
+                    resumepercentage=resumepercentage,
+                    isshortlisted=isshortlisted
                 )
 
                 db_candidates_obj.add()
+                db.session.refresh(db_candidates_obj)
+                candidate_id_dict[key] = db_candidates_obj.id
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
                 raise ex
+
+        return candidate_id_dict

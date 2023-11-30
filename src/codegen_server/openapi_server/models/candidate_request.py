@@ -12,7 +12,7 @@ class CandidateRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, name=None, email=None, jobid=None, resume_matched_percentage=None, is_shortlisted=None):  # noqa: E501
+    def __init__(self, name=None, email=None, jobid=None, resumepercentage=None, isshortlisted=None):  # noqa: E501
         """CandidateRequest - a model defined in OpenAPI
 
         :param name: The name of this CandidateRequest.  # noqa: E501
@@ -21,32 +21,32 @@ class CandidateRequest(Model):
         :type email: str
         :param jobid: The jobid of this CandidateRequest.  # noqa: E501
         :type jobid: int
-        :param resume_matched_percentage: The resume_matched_percentage of this CandidateRequest.  # noqa: E501
-        :type resume_matched_percentage: str
-        :param is_shortlisted: The is_shortlisted of this CandidateRequest.  # noqa: E501
-        :type is_shortlisted: str
+        :param resumepercentage: The resumepercentage of this CandidateRequest.  # noqa: E501
+        :type resumepercentage: str
+        :param isshortlisted: The isshortlisted of this CandidateRequest.  # noqa: E501
+        :type isshortlisted: str
         """
         self.openapi_types = {
             'name': str,
             'email': str,
             'jobid': int,
-            'resume_matched_percentage': str,
-            'is_shortlisted': str
+            'resumepercentage': str,
+            'isshortlisted': str
         }
 
         self.attribute_map = {
             'name': 'name',
             'email': 'email',
             'jobid': 'jobid',
-            'resume_matched_percentage': 'resume_matched_percentage',
-            'is_shortlisted': 'is_shortlisted'
+            'resumepercentage': 'resumepercentage',
+            'isshortlisted': 'isshortlisted'
         }
 
         self._name = name
         self._email = email
         self._jobid = jobid
-        self._resume_matched_percentage = resume_matched_percentage
-        self._is_shortlisted = is_shortlisted
+        self._resumepercentage = resumepercentage
+        self._isshortlisted = isshortlisted
 
     @classmethod
     def from_dict(cls, dikt) -> 'CandidateRequest':
@@ -123,43 +123,43 @@ class CandidateRequest(Model):
         self._jobid = jobid
 
     @property
-    def resume_matched_percentage(self) -> str:
-        """Gets the resume_matched_percentage of this CandidateRequest.
+    def resumepercentage(self) -> str:
+        """Gets the resumepercentage of this CandidateRequest.
 
 
-        :return: The resume_matched_percentage of this CandidateRequest.
+        :return: The resumepercentage of this CandidateRequest.
         :rtype: str
         """
-        return self._resume_matched_percentage
+        return self._resumepercentage
 
-    @resume_matched_percentage.setter
-    def resume_matched_percentage(self, resume_matched_percentage: str):
-        """Sets the resume_matched_percentage of this CandidateRequest.
+    @resumepercentage.setter
+    def resumepercentage(self, resumepercentage: str):
+        """Sets the resumepercentage of this CandidateRequest.
 
 
-        :param resume_matched_percentage: The resume_matched_percentage of this CandidateRequest.
-        :type resume_matched_percentage: str
+        :param resumepercentage: The resumepercentage of this CandidateRequest.
+        :type resumepercentage: str
         """
 
-        self._resume_matched_percentage = resume_matched_percentage
+        self._resumepercentage = resumepercentage
 
     @property
-    def is_shortlisted(self) -> str:
-        """Gets the is_shortlisted of this CandidateRequest.
+    def isshortlisted(self) -> str:
+        """Gets the isshortlisted of this CandidateRequest.
 
 
-        :return: The is_shortlisted of this CandidateRequest.
+        :return: The isshortlisted of this CandidateRequest.
         :rtype: str
         """
-        return self._is_shortlisted
+        return self._isshortlisted
 
-    @is_shortlisted.setter
-    def is_shortlisted(self, is_shortlisted: str):
-        """Sets the is_shortlisted of this CandidateRequest.
+    @isshortlisted.setter
+    def isshortlisted(self, isshortlisted: str):
+        """Sets the isshortlisted of this CandidateRequest.
 
 
-        :param is_shortlisted: The is_shortlisted of this CandidateRequest.
-        :type is_shortlisted: str
+        :param isshortlisted: The isshortlisted of this CandidateRequest.
+        :type isshortlisted: str
         """
 
-        self._is_shortlisted = is_shortlisted
+        self._isshortlisted = isshortlisted
