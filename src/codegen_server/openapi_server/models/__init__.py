@@ -11,6 +11,7 @@ from openapi_server.models.get_user_data_object import GetUserDataObject
 from openapi_server.models.job_request import JobRequest
 from openapi_server.models.question_object import QuestionObject
 from openapi_server.models.question_request import QuestionRequest
+from openapi_server.models.respone_object import ResponeObject
 from openapi_server.models.save_candidates200_response import SaveCandidates200Response
 from openapi_server.models.save_job_object import SaveJobObject
 from openapi_server.models.save_question_object import SaveQuestionObject

@@ -167,6 +167,35 @@ paths:
       tags:
       - swagger_ui
       x-openapi-router-controller: openapi_server.controllers.swagger_ui_controller
+  /jd/upload:
+    post:
+      description: This API is used to upload JD
+      operationId: upload_jd
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/JDRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponeObject'
+          description: JD uploaded successfully
+      summary: To upload JD
+      tags:
+      - jd
+      x-openapi-router-controller: openapi_server.controllers.jd_controller
   /jobs:
     get:
       description: This API is used to get all job details
@@ -503,6 +532,15 @@ components:
           type: string
       title: AudioBlobRequest
       type: object
+    JDRequest:
+      example:
+        file: file
+      properties:
+        file:
+          format: binary
+          type: string
+      title: AudioBlobRequest
+      type: object
     UserRequest:
       example:
         email: email
@@ -552,6 +590,13 @@ components:
           format: email
           type: string
       title: JobRequest
+    ResponeObject:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      title: ResponeObject
     CandidateRequest:
       example:
         name: name
