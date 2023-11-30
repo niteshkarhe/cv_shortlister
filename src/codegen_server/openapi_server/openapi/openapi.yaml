@@ -72,6 +72,75 @@ paths:
       tags:
       - audio
       x-openapi-router-controller: openapi_server.controllers.audio_controller
+  /candidates:
+    get:
+      description: This API is used to get candidate and question details
+      operationId: get_candidate_questions
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      - description: The candidate email
+        explode: true
+        in: query
+        name: email
+        required: false
+        schema:
+          format: email
+          type: string
+        style: form
+      - description: The candidate logic_code
+        explode: true
+        in: query
+        name: login_code
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCandidateObject'
+          description: Candidate details retrieved successfully
+      summary: To get the candidate and question details
+      tags:
+      - candidate
+      x-openapi-router-controller: openapi_server.controllers.candidate_controller
+    post:
+      description: This API is used to store shortlisted candidates
+      operationId: save_candidates
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidateRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/save_candidates_200_response'
+          description: Candidate data saved successfully
+      summary: To store candidate data
+      tags:
+      - candidate
+      x-openapi-router-controller: openapi_server.controllers.candidate_controller
   /docs/swagger_ui:
     get:
       description: ""
@@ -129,8 +198,8 @@ paths:
       x-openapi-router-controller: openapi_server.controllers.jd_controller
   /jobs:
     get:
-      description: This API is used to get the question details of provided job id
-      operationId: get_questions
+      description: This API is used to get all job details
+      operationId: get_jobs
       parameters:
       - explode: false
         in: header
@@ -140,12 +209,22 @@ paths:
           default: v1
           type: string
         style: simple
-      - description: Job id
+      - description: The candidate email
         explode: true
         in: query
-        name: job_id
-        required: true
+        name: email
+        required: false
         schema:
+          format: email
+          type: string
+        style: form
+      - description: The candidate logic_code
+        explode: true
+        in: query
+        name: login_code
+        required: false
+        schema:
+          format: email
           type: string
         style: form
       responses:
@@ -153,9 +232,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuestionObject'
-          description: Question details retrieved successfully
-      summary: To get the question details
+                $ref: '#/components/schemas/GetJobObject'
+          description: Job details retrieved successfully
+      summary: To get the job details
       tags:
       - job
       x-openapi-router-controller: openapi_server.controllers.job_controller
@@ -184,6 +263,37 @@ paths:
                 $ref: '#/components/schemas/SaveJobObject'
           description: Job data saved successfully
       summary: To store job data for given role
+      tags:
+      - job
+      x-openapi-router-controller: openapi_server.controllers.job_controller
+  /jobs/{job_id}:
+    get:
+      description: This API is used to get the question details of provided job id
+      operationId: get_jobid_questions
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: job_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionObject'
+          description: Question details retrieved successfully
+      summary: To get the question details
       tags:
       - job
       x-openapi-router-controller: openapi_server.controllers.job_controller
@@ -239,7 +349,81 @@ paths:
       tags:
       - question
       x-openapi-router-controller: openapi_server.controllers.question_controller
+    put:
+      description: This API is used to update question and expected_answer
+      operationId: update_question
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaveQuestionObject'
+          description: Question data updated successfully
+      summary: To update question data for given role
+      tags:
+      - question
+      x-openapi-router-controller: openapi_server.controllers.question_controller
   /user:
+    delete:
+      description: This API is used to delete all user records
+      operationId: delete_userdata
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: User data deleted successfully
+      summary: To delete the user data
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
+    get:
+      description: This API is used to get all user data
+      operationId: get_userdata
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDataObject'
+          description: User data retrieved successfully
+      summary: To get the user data
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
     post:
       description: This API is used to store user response in database
       operationId: save_user_response
@@ -363,7 +547,6 @@ components:
         name: name
         role: role
         question: question
-        answer: answer
       properties:
         email:
           format: email
@@ -374,17 +557,18 @@ components:
           type: string
         question:
           type: string
-        answer:
-          type: string
       title: UserRequest
       type: object
     QuestionRequest:
       example:
+        id: id
         role: role
         hr_email: hr_email
         question: question
         expected_answer: expected_answer
       properties:
+        id:
+          type: integer
         role:
           type: string
         hr_email:
@@ -413,6 +597,20 @@ components:
         message:
           type: string
       title: ResponeObject
+    CandidateRequest:
+      example:
+        name: name
+        email: email
+        jobid: jobid
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        jobid:
+          type: integer
+      title: CandidateRequest
       type: object
     AudioObject:
       example:
@@ -425,11 +623,14 @@ components:
     QuestionObject:
       example:
         questions: question
+        role: role
       properties:
         questions:
           items:
             type: string
           type: array
+        role:
+          type: string
       title: QuestionObject
       type: object
     UserObject:
@@ -447,6 +648,7 @@ components:
         message:
           type: string
       title: SaveQuestionObject
+      type: object
     SaveJobObject:
       example:
         message: message
@@ -454,6 +656,79 @@ components:
         message:
           type: string
       title: SaveJobObject
+      type: object
+    GetJobObject:
+      example:
+        job_id: job_id
+        role: role
+        hr_email: hr_email
+      properties:
+        job_id:
+          type: integer
+        role:
+          type: string
+        hr_email:
+          format: email
+          type: string
+      title: GetTypeObject
+      type: object
+    GetUserDataObject:
+      example:
+        id: id
+        name: name
+        email: email
+        role: role
+        question: question
+        answer: answer
+        percentage: percentage
+        result: result
+        recordingpath: recordingpath
+        date: date
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        role:
+          type: string
+        question:
+          type: string
+        answer:
+          type: string
+        percentage:
+          type: integer
+        result:
+          type: string
+        recordingpath:
+          type: string
+        date:
+          format: date-time
+          type: string
+      title: GetUserDataObject
+      type: object
+    GetCandidateObject:
+      example:
+        name: name
+        email: email
+        role: role
+        questions: questions
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        role:
+          type: string
+        questions:
+          items:
+            type: string
+          type: array
+      title: GetCandidateObject
+      type: object
     users_model:
       properties:
         id:
@@ -477,6 +752,14 @@ components:
         date:
           format: date-time
           type: string
+    save_candidates_200_response:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      title: save_candidates_200_response
+      type: object
   securitySchemes:
     basicAuth:
       description: Requests should pass credentials in header

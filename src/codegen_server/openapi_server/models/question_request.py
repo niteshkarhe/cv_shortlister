@@ -12,9 +12,11 @@ class QuestionRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, role=None, hr_email=None, question=None, expected_answer=None):  # noqa: E501
+    def __init__(self, id=None, role=None, hr_email=None, question=None, expected_answer=None):  # noqa: E501
         """QuestionRequest - a model defined in OpenAPI
 
+        :param id: The id of this QuestionRequest.  # noqa: E501
+        :type id: int
         :param role: The role of this QuestionRequest.  # noqa: E501
         :type role: str
         :param hr_email: The hr_email of this QuestionRequest.  # noqa: E501
@@ -25,6 +27,7 @@ class QuestionRequest(Model):
         :type expected_answer: str
         """
         self.openapi_types = {
+            'id': int,
             'role': str,
             'hr_email': str,
             'question': str,
@@ -32,12 +35,14 @@ class QuestionRequest(Model):
         }
 
         self.attribute_map = {
+            'id': 'id',
             'role': 'role',
             'hr_email': 'hr_email',
             'question': 'question',
             'expected_answer': 'expected_answer'
         }
 
+        self._id = id
         self._role = role
         self._hr_email = hr_email
         self._question = question
@@ -53,6 +58,27 @@ class QuestionRequest(Model):
         :rtype: QuestionRequest
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def id(self) -> int:
+        """Gets the id of this QuestionRequest.
+
+
+        :return: The id of this QuestionRequest.
+        :rtype: int
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id: int):
+        """Sets the id of this QuestionRequest.
+
+
+        :param id: The id of this QuestionRequest.
+        :type id: int
+        """
+
+        self._id = id
 
     @property
     def role(self) -> str:

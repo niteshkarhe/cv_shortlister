@@ -3,7 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#Idea folder
 .idea
+
+#Files
+.mp4
+.wav
 
 # C extensions
 *.so

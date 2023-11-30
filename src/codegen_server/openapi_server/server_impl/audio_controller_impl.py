@@ -2,6 +2,10 @@ from openapi_server.wrappers.wrapper import wrap
 from openapi_server.wrappers.standard import log_entering, log_exiting
 from openapi_server.app_context import app, db, get_logger
 from openapi_server.utils.utilities import utils
+from openapi_server.dbmodels.db_users import Db_Users
+from openapi_server.dbmodels.db_questions import Db_Questions
+
+from openapi_server.models.audio_object import AudioObject
 
 import speech_recognition as sr
 import pyttsx3
@@ -12,7 +16,9 @@ from flask import request
 import pydub
 from pydub import AudioSegment
 import time
+from timeit import default_timer as timer
 import subprocess
+from datetime import datetime;
 
 from openapi_server.models.error import Error
 from openapi_server.config import (
@@ -29,6 +35,7 @@ class Audio_controller_Impl:
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             try:
                 r = sr.Recognizer()
+                start = timer()
                 while(1):
                     try:
                         with sr.Microphone() as source2:
@@ -42,9 +49,17 @@ class Audio_controller_Impl:
                             return "Did you say " + MyText, 200
 
                     except sr.RequestError as e:
+                        end = timer()
+                        print(end - start)
+                        if (end - start > 10):
+                            return Error(code=404, message="No audio detected for more than 10 sec")
                         print("Could not request results; {0}".format(e))
 
                     except sr.UnknownValueError:
+                        end = time.time()
+                        print(end - start)
+                        if (end - start > 10):
+                            return Error(code=404, message="No audio detected for more than 10 sec")
                         print("unknown error occurred")
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
@@ -55,33 +70,77 @@ class Audio_controller_Impl:
         version_info = utils.get_api_version(accept_version)
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             try:
+                date_format = "%Y-%m-%d %H-%M-%S"
                 blobData = request.files['file']
-                filename = secure_filename(blobData.filename)
-                mpthreepath = os.path.join(os.getcwd() + "\\upload", "audiofile.mp4")
-                blobData.save(mpthreepath)
+                filename = secure_filename(blobData.filename) + "-" + datetime.utcnow().strftime(date_format)
+                recordid = filename[0:filename.index("-")]
+                mpfourpath = os.path.join(os.getcwd() + "\\upload", filename+".mp4")
+                blobData.save(mpfourpath)
                 time.sleep(5)
-                wavpath = os.path.join(os.getcwd() + "\\upload", "audiofile.wav")
-                subprocess.call(['ffmpeg', '-i', mpthreepath, wavpath])
+                wavpath = os.path.join(os.getcwd() + "\\upload", filename+".wav")
+                subprocess.call(['ffmpeg', '-i', mpfourpath, wavpath])
                 #self.logger.info('blob data : ', blobData)
 
                 r = sr.Recognizer()
-
                 with sr.AudioFile(wavpath) as source:
                     audio_data = r.record(source)
-                    #text = r.recognize_google(audio_data, language='en-IN', show_all=True)
-                    text = r.recognize_google(audio_data)
-                    #self.logger.info("Converted text: " + str(text))
-                    return_text = " Did you say : " + text
-                    # try:
-                    #     for num, texts in enumerate(text['alternative']):
-                    #         return_text += str(num+1) +") " + texts['transcript']  + " <br> "
-                    # except:
-                    #     return_text = " Sorry!!!! Voice not Detected "
+                    start = timer()
+                    while(1):
+                        try:
+                            actual_answer = r.recognize_google(audio_data)
+                            userdata = Db_Users.get_userdata_for_given_id(id=recordid)
+                            role = ''
+                            asked_question = ''
+                            if userdata is not None:
+                                role = userdata.role
+                                asked_question = userdata.question
+                            else:
+                                return Error(code=404, message="User data could not find with the record id: ["+ recordid + "]"), 404
 
-                return str(return_text), 200
+                            asked_question_details = Db_Questions.get_actual_answer(role=role, question=asked_question)
+                            print(asked_question_details.expected_answer)
+                            expected_answer = ''
+                            if asked_question_details is not None:
+                                expected_answer = asked_question_details.expected_answer
+                            else:
+                                return Error(code=404, message="Question data could not find with the role: ["+ role + "] and question: [" + asked_question + "]"), 404
+
+                            matched_percentage = self.compare_answers(expected_answer, actual_answer)
+                            result = ''
+                            if matched_percentage == 100:
+                                result = 'Passed'
+                            else:
+                                result = 'Failed'
+
+                            Db_Users().update_userdata_for_given_id(recordid, actual_answer, "\\upload\\"+filename+".mp4", str(matched_percentage), result)
+
+                            return AudioObject(message="For record " + str(recordid) + ", speech to text is: " + actual_answer), 200
+                        except sr.UnknownValueError:
+                            end = timer()
+                            if (end - start > 10):
+                                return AudioObject(message="Could not understand audio, unknown error"), 500
+                        except sr.RequestError as e:
+                            end = timer()
+                            if (end - start > 10):
+                                return AudioObject(message=str(e)), 500
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
-                return Error(code=500, message=ex)
+                return Error(code=500, message=ex), 500
+
+    def compare_answers(self, expected_answer, actual_answer):
+        expected_answer_words = expected_answer.split()
+        actual_answer_words = actual_answer.split()
+        flag = []
+        for expected in expected_answer_words:
+            if expected in actual_answer_words:
+                flag.append(True)
+            else:
+                flag.append(False)
+
+        if all(flag):
+            return 100
+        else:
+            return 0
 
     def SpeakText(self, command):
 

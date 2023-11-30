@@ -12,21 +12,26 @@ class QuestionObject(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, questions=None):  # noqa: E501
+    def __init__(self, questions=None, role=None):  # noqa: E501
         """QuestionObject - a model defined in OpenAPI
 
         :param questions: The questions of this QuestionObject.  # noqa: E501
         :type questions: List[str]
+        :param role: The role of this QuestionObject.  # noqa: E501
+        :type role: str
         """
         self.openapi_types = {
-            'questions': List[str]
+            'questions': List[str],
+            'role': str
         }
 
         self.attribute_map = {
-            'questions': 'questions'
+            'questions': 'questions',
+            'role': 'role'
         }
 
         self._questions = questions
+        self._role = role
 
     @classmethod
     def from_dict(cls, dikt) -> 'QuestionObject':
@@ -59,3 +64,24 @@ class QuestionObject(Model):
         """
 
         self._questions = questions
+
+    @property
+    def role(self) -> str:
+        """Gets the role of this QuestionObject.
+
+
+        :return: The role of this QuestionObject.
+        :rtype: str
+        """
+        return self._role
+
+    @role.setter
+    def role(self, role: str):
+        """Sets the role of this QuestionObject.
+
+
+        :param role: The role of this QuestionObject.
+        :type role: str
+        """
+
+        self._role = role

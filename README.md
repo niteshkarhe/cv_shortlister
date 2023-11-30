@@ -13,26 +13,26 @@ This is a python flask API project to shortlist cv and schedule interviews
 6. clone repository
 
 # Step to run project
-1. After cloning the project, run command in CMD inside speech_to_text project folder:  `pip install virtualenv`
-2. Run command `python -m virtualenv -python python311 env`. This will create **env** folder inside **speech_to_text** folder
+1. After cloning the project, run command in CMD inside cv_shortlister project folder:  `pip install virtualenv`
+2. Run command `python -m virtualenv -python python311 env`. This will create **env** folder inside **cv_shortlister** folder
 3. Go to folder: env\Scripts and run command in CMD at this location: `activate`. You should see **(env)** written in the CMD at the start of the path. This has activated the virtual environment
-4. Be in the same CMD and go back to the folder speech_to_text and run command - `pip install -r requirements.txt`
+4. Be in the same CMD and go back to the folder cv_shortlister and run command - `pip install -r requirements.txt`
 5. Now from the same CMD, run below command by changing your project location:
    openapi-generator-cli generate -t E:\NK\PythonProject\cv_shortlister\codegen\template -i E:\NK\PythonProject\cv_shortlister\src\codegen_server\openapi_server\openapi\openapi.yaml -g python-flask -o E:\NK\PythonProject\cv_shortlister\src\codegen_server --generate-alias-as-model
 
    **Note**: Please note that the project location till cv_shortlister folder needs to change based on your system
 6. Change the content of cv_shortlister/src/codegen_server/openapi_server/__main__.py:
 
-#!/usr/bin/env python3<br/>
-import os<br/>
-from openapi_server.run import application<br/>
+`#!/usr/bin/env python3`<br/>
+`import os`<br/>
+`from openapi_server.run import application`<br/>
 
-def main():<br/>
-   port = os.getenv("PORT") or 5000<br/>
-   application.run(port=port)<br/>
+`def main():`<br/>
+`   port = os.getenv("PORT") or 5000`<br/>
+`   application.run(port=port)`<br/>
 
-if __name__ == '__main__':<br/>
-   main()<br/>
+`if __name__ == '__main__':`<br/>
+`   main()`<br/>
 
    **Note**: If you see "br" in the above code, then remove those from the python code
 
