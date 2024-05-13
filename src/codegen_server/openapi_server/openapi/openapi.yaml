@@ -73,6 +73,37 @@ paths:
       - audio
       x-openapi-router-controller: openapi_server.controllers.audio_controller
   /candidates:
+    delete:
+      description: This API is used to delete candidate
+      operationId: delete_candidate
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      - description: Numeric ID of the candidate to delete
+        explode: true
+        in: query
+        name: candidateId
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Candidate data deleted successfully
+      summary: To delete the candidate data
+      tags:
+      - candidate
+      x-openapi-router-controller: openapi_server.controllers.candidate_controller
     get:
       description: This API is used to get candidate and question details
       operationId: get_candidate_questions
@@ -481,6 +512,37 @@ paths:
       tags:
       - user
       x-openapi-router-controller: openapi_server.controllers.user_controller
+  /user/{user_id}:
+    delete:
+      description: This API is used to delete the user response of particular id
+      operationId: delete_particular_user_data
+      parameters:
+      - explode: false
+        in: header
+        name: accept_version
+        required: false
+        schema:
+          default: v1
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: User data deleted successfully
+      summary: To delete the user details
+      tags:
+      - user
+      x-openapi-router-controller: openapi_server.controllers.user_controller
 components:
   schemas:
     attribute:
@@ -576,6 +638,10 @@ components:
         name: name
         role: role
         question: question
+        answer: answer
+        percentage: percentage
+        result: result
+        recordingpath: recordingpath
       properties:
         email:
           format: email
@@ -586,6 +652,19 @@ components:
           type: string
         question:
           type: string
+        answer:
+          type: string
+        percentage:
+          type: integer
+        result:
+          type: string
+        recordingpath:
+          type: string
+      required:
+      - email
+      - name
+      - question
+      - role
       title: UserRequest
       type: object
     QuestionRequest:

@@ -82,6 +82,7 @@ class Candidate_controller_Impl:
                 self.logger.error(ex, exc_info=True)
                 return Error(code=500, message=ex), 500
 
+    @wrap(log_entering, log_exiting)
     def save_scanned_candidates(self, analyzed_candidates):
         for key, value in analyzed_candidates.items():
             candidate_id_dict = {}
@@ -108,3 +109,17 @@ class Candidate_controller_Impl:
                 raise ex
 
         return candidate_id_dict
+
+    @wrap(log_entering, log_exiting)
+    def delete_candidate(self, candidate_id, accept_version):
+        version_info = utils.get_api_version(accept_version)
+        if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
+            try:
+                db.session.execute(text(
+                    "delete from candidates where id = " + str(candidate_id)
+                ))
+                db.session.commit()
+                return make_response(jsonify({'message': 'Candidate deleted successfully'})), 200
+            except Exception as ex:
+                self.logger.error(ex, exc_info=True)
+                return Error(code=500, message=ex)

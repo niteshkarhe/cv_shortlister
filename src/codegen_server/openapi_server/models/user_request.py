@@ -12,7 +12,7 @@ class UserRequest(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, email=None, name=None, role=None, question=None):  # noqa: E501
+    def __init__(self, email=None, name=None, role=None, question=None, answer=None, percentage=None, result=None, recordingpath=None):  # noqa: E501
         """UserRequest - a model defined in OpenAPI
 
         :param email: The email of this UserRequest.  # noqa: E501
@@ -23,25 +23,45 @@ class UserRequest(Model):
         :type role: str
         :param question: The question of this UserRequest.  # noqa: E501
         :type question: str
+        :param answer: The answer of this UserRequest.  # noqa: E501
+        :type answer: str
+        :param percentage: The percentage of this UserRequest.  # noqa: E501
+        :type percentage: int
+        :param result: The result of this UserRequest.  # noqa: E501
+        :type result: str
+        :param recordingpath: The recordingpath of this UserRequest.  # noqa: E501
+        :type recordingpath: str
         """
         self.openapi_types = {
             'email': str,
             'name': str,
             'role': str,
-            'question': str
+            'question': str,
+            'answer': str,
+            'percentage': int,
+            'result': str,
+            'recordingpath': str
         }
 
         self.attribute_map = {
             'email': 'email',
             'name': 'name',
             'role': 'role',
-            'question': 'question'
+            'question': 'question',
+            'answer': 'answer',
+            'percentage': 'percentage',
+            'result': 'result',
+            'recordingpath': 'recordingpath'
         }
 
         self._email = email
         self._name = name
         self._role = role
         self._question = question
+        self._answer = answer
+        self._percentage = percentage
+        self._result = result
+        self._recordingpath = recordingpath
 
     @classmethod
     def from_dict(cls, dikt) -> 'UserRequest':
@@ -72,6 +92,8 @@ class UserRequest(Model):
         :param email: The email of this UserRequest.
         :type email: str
         """
+        if email is None:
+            raise ValueError("Invalid value for `email`, must not be `None`")  # noqa: E501
 
         self._email = email
 
@@ -93,6 +115,8 @@ class UserRequest(Model):
         :param name: The name of this UserRequest.
         :type name: str
         """
+        if name is None:
+            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
 
         self._name = name
 
@@ -114,6 +138,8 @@ class UserRequest(Model):
         :param role: The role of this UserRequest.
         :type role: str
         """
+        if role is None:
+            raise ValueError("Invalid value for `role`, must not be `None`")  # noqa: E501
 
         self._role = role
 
@@ -135,5 +161,91 @@ class UserRequest(Model):
         :param question: The question of this UserRequest.
         :type question: str
         """
+        if question is None:
+            raise ValueError("Invalid value for `question`, must not be `None`")  # noqa: E501
 
         self._question = question
+
+    @property
+    def answer(self) -> str:
+        """Gets the answer of this UserRequest.
+
+
+        :return: The answer of this UserRequest.
+        :rtype: str
+        """
+        return self._answer
+
+    @answer.setter
+    def answer(self, answer: str):
+        """Sets the answer of this UserRequest.
+
+
+        :param answer: The answer of this UserRequest.
+        :type answer: str
+        """
+
+        self._answer = answer
+
+    @property
+    def percentage(self) -> int:
+        """Gets the percentage of this UserRequest.
+
+
+        :return: The percentage of this UserRequest.
+        :rtype: int
+        """
+        return self._percentage
+
+    @percentage.setter
+    def percentage(self, percentage: int):
+        """Sets the percentage of this UserRequest.
+
+
+        :param percentage: The percentage of this UserRequest.
+        :type percentage: int
+        """
+
+        self._percentage = percentage
+
+    @property
+    def result(self) -> str:
+        """Gets the result of this UserRequest.
+
+
+        :return: The result of this UserRequest.
+        :rtype: str
+        """
+        return self._result
+
+    @result.setter
+    def result(self, result: str):
+        """Sets the result of this UserRequest.
+
+
+        :param result: The result of this UserRequest.
+        :type result: str
+        """
+
+        self._result = result
+
+    @property
+    def recordingpath(self) -> str:
+        """Gets the recordingpath of this UserRequest.
+
+
+        :return: The recordingpath of this UserRequest.
+        :rtype: str
+        """
+        return self._recordingpath
+
+    @recordingpath.setter
+    def recordingpath(self, recordingpath: str):
+        """Sets the recordingpath of this UserRequest.
+
+
+        :param recordingpath: The recordingpath of this UserRequest.
+        :type recordingpath: str
+        """
+
+        self._recordingpath = recordingpath

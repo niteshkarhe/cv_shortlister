@@ -511,7 +511,7 @@ class Jd_controller_Impl:
         #     if len(line) >= 30:
 
         #         sentSims = []
-        #         sents = []
+        #         sents = []q
 
         #         for sent in positionText:
 

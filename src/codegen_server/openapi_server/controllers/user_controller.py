@@ -10,6 +10,25 @@ from openapi_server import util
 
 
 
+def delete_particular_user_data(user_id, accept_version=None):  # noqa: E501
+    """To delete the user details
+
+    This API is used to delete the user response of particular id # noqa: E501
+
+    :param user_id: 
+    :type user_id: str
+    :param accept_version: 
+    :type accept_version: str
+
+    :rtype: str
+    """
+
+    impl = serviceImpl()
+
+    return impl.delete_particular_user_data(user_id, accept_version)
+
+
+
 def delete_userdata(accept_version=None):  # noqa: E501
     """To delete the user data
 

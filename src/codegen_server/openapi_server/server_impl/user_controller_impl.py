@@ -26,14 +26,13 @@ class User_controller_Impl:
         if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
             date_format = "%Y-%m-%d %H:%M:%S"
             add_date = datetime.strptime(datetime.utcnow().strftime(date_format), date_format)
-            print(add_date)
             try:
                 db_users_obj = Db_Users(
                     email = user_request.email,
                     name = user_request.name,
                     role = user_request.role,
                     question = user_request.question,
-                    answer = '',
+                    answer = user_request.answer,
                     percentage = 100,
                     result = 'Passed',
                     recordingpath = '',
@@ -84,6 +83,19 @@ class User_controller_Impl:
             try:
                 Db_Users().delete()
                 return make_response(jsonify({'message': 'User record deleted successfully'})), 200
+            except Exception as ex:
+                self.logger.error(ex, exc_info=True)
+                return Error(code=500, message=ex)
+
+    def delete_particular_user_data(self, user_id, accept_version):
+        version_info = utils.get_api_version(accept_version)
+        if version_info is None or version_info.lower() == DEFAULT_API_VERSION:
+            try:
+                db.session.execute(text(
+                    "delete from users where id = " + str(user_id)
+                ))
+                db.session.commit()
+                return make_response(jsonify({'message': 'User question details are deleted successfully'})), 200
             except Exception as ex:
                 self.logger.error(ex, exc_info=True)
                 return Error(code=500, message=ex)

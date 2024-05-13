@@ -10,6 +10,25 @@ from openapi_server import util
 
 
 
+def delete_candidate(candidate_id, accept_version=None):  # noqa: E501
+    """To delete the candidate data
+
+    This API is used to delete candidate # noqa: E501
+
+    :param candidate_id: Numeric ID of the candidate to delete
+    :type candidate_id: int
+    :param accept_version: 
+    :type accept_version: str
+
+    :rtype: str
+    """
+
+    impl = serviceImpl()
+
+    return impl.delete_candidate(candidate_id, accept_version)
+
+
+
 def get_candidate_questions(accept_version=None, email=None, login_code=None):  # noqa: E501
     """To get the candidate and question details
 
