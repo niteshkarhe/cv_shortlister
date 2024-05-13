@@ -279,22 +279,22 @@ class Jd_controller_Impl:
             #                 upper_words.extend(word_tokenize(plain_text.upper()))
 
             # print(resumeplainlines)
-            for line in resumeplainlines:
-                candidate_email = re.findall(r"[A-Za-z0-9_%+-.]+"
-                      r"@[A-Za-z0-9.-]+ "
-                      r"\.[A-Za-z]{2,5}",line)
-                # candidate_email = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', line.strip())
-                if (not isinstance(candidate_email, type(None))) and len(candidate_email) > 0:
-                    break
-            print(candidate_email)
+            # for line in resumeplainlines:
+            #     candidate_email = re.findall(r"[A-Za-z0-9_%+-.]+"
+            #           r"@[A-Za-z0-9.-]+ "
+            #           r"\.[A-Za-z]{2,5}",line)
+            #     # candidate_email = re.search(r'[\w.+-]+@[\w-]+\.[\w.-]+', line.strip())
+            #     if (not isinstance(candidate_email, type(None))) and len(candidate_email) > 0:
+            #         break
+            # print(candidate_email)
 
-            if (isinstance(candidate_email, type(None)) or len(candidate_email) == 0):
-                candidate_email = resumeFileName+"@gmail.com"
-            print(candidate_email)
+            # if (isinstance(candidate_email, type(None)) or len(candidate_email) == 0):
+            #     candidate_email = resumeFileName+"@gmail.com"
+            # print(candidate_email)
 
             
             result["job_id"]=originalJDfilename.split("-")[0]
-            result["email"]= candidate_email #"nsaudagar1989@gmail.com"
+            result["email"]= "nsaudagar1989@gmail.com"
             result["resume_matched_percentage"]=keywordSimi
             result["recommended_words_in_resume"]=recWords
             # result["experience_matched_percentage"]=sentSimi
